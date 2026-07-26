@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>وش بتختار؟</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7c4dff;
+    --purple-deep:#5e35d6;
+    --purple-soft:#b39ddf;
+    --coral:#ff6f91;
+    --coral-soft:#ff9eb5;
+    --sunny:#ffc24b;
+    --sunny-light:#ffd98a;
+    --ink:#3a2a5c;
+    --ink-soft:#6b5b8a;
+    --paper:#fffdfa;
+    --lav-bg:#f3ecff;
+    --cream:#3a2a5c;
+    --shadow: 0 18px 44px rgba(124,77,255,0.20);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; min-height:100vh;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(255,111,145,0.18), transparent 45%),
+      radial-gradient(ellipse at 85% 10%, rgba(255,194,75,0.18), transparent 45%),
+      radial-gradient(ellipse at 50% 110%, rgba(124,77,255,0.20), transparent 55%),
+      var(--lav-bg);
+    color:var(--ink); font-family:'Tajawal',sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px 16px; overflow-x:hidden;
+  }
+  .stage{ width:100%; max-width:440px; }
+  .eyebrow{ text-align:center; font-family:'Amiri',serif; font-style:italic; color:var(--ink-soft); font-size:15px; letter-spacing:1px; margin-bottom:6px; }
+  h1.title{ text-align:center; font-family:'Amiri',serif; font-weight:700; font-size:34px; color:var(--purple); margin:0 0 4px; text-shadow:0 2px 12px rgba(201,162,75,.25); }
+  .divider{ display:flex; align-items:center; justify-content:center; gap:10px; margin:18px 0 26px; color:var(--ink-soft); }
+  .divider::before,.divider::after{ content:""; flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--ink-soft),transparent); }
+  .divider span{ font-size:13px; }
+  .card{
+    background:linear-gradient(160deg,var(--paper),var(--paper));
+    border:1px solid rgba(255,194,75,0.35); border-radius:20px;
+    padding:30px 24px; box-shadow:var(--shadow); position:relative; animation:rise .5s ease both;
+  }
+  .card::before{ content:""; position:absolute; inset:6px; border:1px solid rgba(201,162,75,.15); border-radius:14px; pointer-events:none; }
+  @keyframes rise{ from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+  .subtext{ text-align:center; opacity:.8; font-size:14.5px; line-height:1.9; margin:0 0 22px; }
+  .btn{
+    display:block; width:100%;
+    background:linear-gradient(135deg,var(--coral),var(--purple));
+    color:#fff; border:none; border-radius:14px;
+    font-family:'Tajawal',sans-serif; font-weight:700; font-size:16.5px;
+    padding:16px; margin-top:14px; cursor:pointer; transition:transform .15s ease;
+    box-shadow:0 8px 18px rgba(201,162,75,.22);
+  }
+  .btn:active{ transform:scale(.97); }
+  .btn:disabled{ opacity:.5; }
+  .btn.ghost{ background:transparent; color:var(--purple); border:1.5px solid var(--ink-soft); box-shadow:none; }
+  .btn.wide-option{ background:rgba(124,77,255,0.05); color:var(--ink); border:1.5px solid rgba(124,77,255,0.30); text-align:right; font-weight:500; box-shadow:none; }
+  .btn.wide-option:active{ background:rgba(124,77,255,0.12); }
+  input.code-input{
+    width:100%; text-align:center; letter-spacing:10px;
+    font-size:26px; font-family:'Amiri',serif; font-weight:700;
+    background:rgba(124,77,255,0.06); color:var(--purple);
+    border:1.5px solid var(--ink-soft); border-radius:14px; padding:14px; margin-bottom:6px;
+  }
+  input.code-input::placeholder{ color:rgba(232,213,160,.35); letter-spacing:4px; font-size:16px; }
+  .code-display{ text-align:center; font-family:'Amiri',serif; font-weight:700; font-size:44px; letter-spacing:14px; color:var(--purple); margin:6px 0 18px; text-shadow:0 2px 14px rgba(124,77,255,0.20); }
+  .progress-label{ font-size:13px; color:var(--ink-soft); font-family:'Amiri',serif; font-style:italic; }
+  .progress-track{ height:5px; background:rgba(124,77,255,0.12); border-radius:6px; overflow:hidden; margin:10px 0 22px; }
+  .progress-fill{ height:100%; background:linear-gradient(90deg,var(--purple),var(--coral)); transition:width .4s ease; }
+  .qtext{ font-size:20px; line-height:1.7; text-align:center; margin:6px 0 8px; }
+  .qhint{ text-align:center; font-size:13px; color:var(--ink-soft); font-family:'Amiri',serif; font-style:italic; margin-bottom:22px; }
+  .badge{
+    width:96px; height:96px; margin:0 auto 18px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--sunny-light), var(--coral) 55%, var(--purple));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 30px rgba(255,194,75,0.35), inset 0 2px 6px rgba(255,255,255,.3);
+    font-family:'Amiri',serif; font-style:italic; font-size:15px; color:var(--paper); font-weight:700; text-align:center; line-height:1.3;
+  }
+  .percent{ text-align:center; font-family:'Amiri',serif; font-weight:700; font-size:64px; color:var(--purple); margin:6px 0 2px; text-shadow:0 4px 20px rgba(255,194,75,0.35); }
+  .percent-label{ text-align:center; font-size:14px; color:var(--ink-soft); font-family:'Amiri',serif; font-style:italic; margin-bottom:22px; }
+  .result-row{ padding:12px 4px; border-bottom:1px solid rgba(124,77,255,0.10); font-size:14px; }
+  .result-row:last-child{ border-bottom:none; }
+  .rr-top{ display:flex; align-items:center; justify-content:space-between; }
+  .rr-q{ flex:1; opacity:.9; padding-left:10px; }
+  .mark{ font-size:17px; }
+  .mark.yes{ color:var(--coral); } .mark.no{ color:var(--coral); }
+  .rr-detail{ font-size:12.5px; color:var(--ink-soft); margin-top:6px; padding-right:2px; }
+  .waiting-dots{ text-align:center; font-size:30px; color:var(--coral); letter-spacing:6px; margin:10px 0 4px; animation:pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:.35;} 50%{opacity:1;} }
+  .error-note{ text-align:center; font-size:13px; color:var(--coral); margin:-6px 0 14px; min-height:16px; }
+  .turn-tag{ text-align:center; font-size:13px; color:var(--purple); background:rgba(124,77,255,0.10); border:1px solid rgba(124,77,255,0.20); border-radius:10px; padding:8px; margin-bottom:18px; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://ajwpuafvxkprvyoxqysu.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqd3B1YWZ2eGtwcnZ5b3hxeXN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1OTYyNzAsImV4cCI6MjEwMDE3MjI3MH0.lzdyrIJnQhO7dFhcm00yVB-eLW8FFhZM46EepyFcv-o";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// أسئلة خفيفة + تعرّف. لكل سؤال خياران.
+const QUESTIONS = [
+  {id:1, text:"لو صحّى من النوم وقت ما يبي، متى يقوم؟", a:"بدري مع الفجر", b:"يكسّر النوم لآخر لحظة"},
+  {id:2, text:"لو دخل مطعم لأول مرة، إيش يطلب؟", a:"نفس الطلب المضمون", b:"يجرّب شي جديد"},
+  {id:3, text:"وقت الزعل، إيش طبعه؟", a:"يسكت ويبتعد شوي", b:"يتكلم على طول"},
+  {id:4, text:"لو ربح مبلغ فجأة، وش يسوي فيه؟", a:"يوفّره", b:"يصرفه على شي يفرحه"},
+  {id:5, text:"إيش يحب أكثر بالآخر؟", a:"الضحكة والونس", b:"الحنية والاهتمام"},
+  {id:6, text:"لو نختار فلم نشوفه سوا، وش يميل له؟", a:"أكشن وإثارة", b:"شي هادي أو كوميدي"},
+  {id:7, text:"طريقته بالرد على الرسائل:", a:"يرد على طول", b:"ياخذ وقته"},
+  {id:8, text:"لو نسافر، مين يرتّب البرنامج؟", a:"يخطط كل شي", b:"على البركة ونشوف"},
+  {id:9, text:"إيش يفرّح قلبه بسرعة؟", a:"أكلة يحبها", b:"كلمة حلوة أو مفاجأة"},
+  {id:10, text:"آخر اليوم، وش يريّحه أكثر؟", a:"سوالف طويلة", b:"هدوء وراحة"}
+];
+
+// role يجاوب عن نفسه، والطرف الثاني يتوقّعه. نص السؤال يتغيّر حسب المرحلة.
+let state = { screen:"home", code:"", role:"", otherRole:"", qIndex:0, answers:[], predictions:[] };
+let channel=null, pollTimer=null, lastError="";
+
+const el = h => { const d=document.createElement("div"); d.innerHTML=h.trim(); return d.firstChild; };
+const genCode = () => String(Math.floor(1000+Math.random()*9000));
+const render = () => { const s=document.getElementById("stage"); s.innerHTML=""; s.appendChild(SCREENS[state.screen]()); };
+const verbAns = r => r==="جوري" ? "تجاوب" : "يجاوب";
+
+async function saveRow(kind, payload){
+  const { error } = await db.from("game_answers")
+    .upsert({ room_code: state.code, player: `${state.role}:${kind}`, answers: payload },
+            { onConflict:"room_code,player" });
+  if(error){ lastError = error.message; return false; }
+  lastError=""; return true;
+}
+async function fetchRow(player){
+  const { data, error } = await db.from("game_answers")
+    .select("answers").eq("room_code", state.code).eq("player", player).maybeSingle();
+  if(error){ lastError = error.message; return null; }
+  return data ? data.answers : null;
+}
+function setStatus(msg, isErr){
+  const s=document.getElementById("statusLine");
+  if(s){ s.textContent=msg||""; s.style.color = isErr ? "var(--coral)":"var(--ink-soft)"; }
+}
+
+const SCREENS = {
+  home: () => {
+    const n = el(`
+      <div>
+        <div class="eyebrow">هادي و جوري</div>
+        <h1 class="title">وش بتختار؟</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <p class="subtext">جاوب عن نفسك، وتوقّع إجابات شريكك.<br>مين يعرف الثاني أكثر؟</p>
+          <button class="btn" id="a">ابدأ لعبة جديدة</button>
+          <button class="btn ghost" id="b">عندي كود</button>
+        </div>
+      </div>`);
+    n.querySelector("#a").onclick=()=>{ state.screen="chooseRole"; render(); };
+    n.querySelector("#b").onclick=()=>{ state.screen="joinCode"; render(); };
+    return n;
+  },
+
+  chooseRole: () => {
+    const n = el(`
+      <div>
+        <div class="eyebrow">قبل ما نبدأ</div>
+        <h1 class="title">مين أنت؟</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <button class="btn wide-option" data-role="هادي">هادي</button>
+          <button class="btn wide-option" data-role="جوري">جوري</button>
+        </div>
+      </div>`);
+    n.querySelectorAll("[data-role]").forEach(b=> b.onclick=()=>{
+      state.role=b.dataset.role;
+      state.otherRole = state.role==="هادي"?"جوري":"هادي";
+      state.code=genCode();
+      state.screen="showCode"; render();
+    });
+    return n;
+  },
+
+  showCode: () => {
+    const n = el(`
+      <div>
+        <div class="eyebrow">أرسل الكود لـ ${state.otherRole}</div>
+        <h1 class="title">كود اللعبة</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <div class="code-display">${state.code}</div>
+          <p class="subtext">كل واحد يجاوب عن نفسه أول، بعدها تتوقعون بعض.</p>
+          <button class="btn" id="s">ابدأ</button>
+        </div>
+      </div>`);
+    n.querySelector("#s").onclick=()=>{ state.qIndex=0; state.answers=[]; state.screen="answerSelf"; render(); };
+    return n;
+  },
+
+  joinCode: () => {
+    const n = el(`
+      <div>
+        <div class="eyebrow">الانضمام</div>
+        <h1 class="title">أدخل الكود</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <input class="code-input" id="ci" maxlength="4" inputmode="numeric" placeholder="0000">
+          <div class="error-note" id="er"></div>
+          <button class="btn wide-option" data-role="هادي">أنا هادي</button>
+          <button class="btn wide-option" data-role="جوري">أنا جوري</button>
+          <button class="btn ghost" id="bk">رجوع</button>
+        </div>
+      </div>`);
+    n.querySelector("#bk").onclick=()=>{ state.screen="home"; render(); };
+    n.querySelectorAll("[data-role]").forEach(b=> b.onclick=async ()=>{
+      const code=n.querySelector("#ci").value.trim();
+      if(code.length!==4){ n.querySelector("#er").textContent="أدخل كود من 4 أرقام"; return; }
+      const role=b.dataset.role;
+      n.querySelector("#er").textContent="جاري التحقق...";
+      const taken = await fetchRow(`${role}:self`);
+      if(taken){ n.querySelector("#er").textContent = role+" مسجّل باللعبة، اختر الاسم الثاني"; return; }
+      state.code=code; state.role=role;
+      state.otherRole = role==="هادي"?"جوري":"هادي";
+      state.qIndex=0; state.answers=[];
+      state.screen="answerSelf"; render();
+    });
+    return n;
+  },
+
+  // المرحلة 1: جاوب عن نفسك
+  answerSelf: () => {
+    const q=QUESTIONS[state.qIndex];
+    const pct=Math.round(state.qIndex/QUESTIONS.length*100);
+    const n=el(`
+      <div>
+        <div class="eyebrow">${state.role} — عن نفسك</div>
+        <h1 class="title" style="font-size:26px;">وش بتختار؟</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <span class="progress-label">سؤال ${state.qIndex+1} من ${QUESTIONS.length}</span>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <p class="qtext">${selfText(q, state.role)}</p>
+          <p class="qhint">اختر إجابتك الحقيقية</p>
+          <button class="btn wide-option" data-c="a">${q.a}</button>
+          <button class="btn wide-option" data-c="b">${q.b}</button>
+        </div>
+      </div>`);
+    n.querySelectorAll("[data-c]").forEach(b=> b.onclick=async ()=>{
+      state.answers.push({id:q.id, choice:b.dataset.c});
+      if(state.qIndex<QUESTIONS.length-1){ state.qIndex++; render(); }
+      else {
+        b.disabled=true;
+        const ok=await saveRow("self", state.answers);
+        state.qIndex=0; state.predictions=[];
+        state.screen="predictOther"; render();
+        if(!ok) setStatus("ما انحفظت إجاباتك: "+lastError, true);
+      }
+    });
+    return n;
+  },
+
+  // المرحلة 2: توقّع الطرف الثاني
+  predictOther: () => {
+    const q=QUESTIONS[state.qIndex];
+    const pct=Math.round(state.qIndex/QUESTIONS.length*100);
+    const n=el(`
+      <div>
+        <div class="eyebrow">${state.role} — توقّع ${state.otherRole}</div>
+        <h1 class="title" style="font-size:26px;">وش ${verbAns(state.otherRole)} ${state.otherRole}؟</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <div class="turn-tag">توقّع وش اختار${state.otherRole==="جوري"?"ت":""} ${state.otherRole}</div>
+          <span class="progress-label">سؤال ${state.qIndex+1} من ${QUESTIONS.length}</span>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <p class="qtext">${otherText(q, state.otherRole)}</p>
+          <button class="btn wide-option" data-c="a">${q.a}</button>
+          <button class="btn wide-option" data-c="b">${q.b}</button>
+        </div>
+      </div>`);
+    n.querySelectorAll("[data-c]").forEach(b=> b.onclick=async ()=>{
+      state.predictions.push({id:q.id, choice:b.dataset.c});
+      if(state.qIndex<QUESTIONS.length-1){ state.qIndex++; render(); }
+      else {
+        b.disabled=true;
+        const ok=await saveRow("pred", state.predictions);
+        state.screen="waiting"; render();
+        if(!ok) setStatus("ما انحفظت توقعاتك: "+lastError, true);
+        watchForResult();
+      }
+    });
+    return n;
+  },
+
+  waiting: () => {
+    const n=el(`
+      <div>
+        <div class="eyebrow">خلصت دورك يا ${state.role}</div>
+        <h1 class="title" style="font-size:24px;">بانتظار ${state.otherRole}</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <div class="waiting-dots">• • •</div>
+          <p class="subtext">كود اللعبة: <b style="color:var(--purple)">${state.code}</b><br>أول ما ${verbAns(state.otherRole)} ${state.otherRole} كل شي، تطلع النتيجة.</p>
+          <div class="error-note" id="statusLine"></div>
+          <button class="btn ghost" id="rf">تحديث الآن</button>
+        </div>
+      </div>`);
+    n.querySelector("#rf").onclick=async ()=>{ setStatus("جاري التحقق...",false); tryResult(); };
+    return n;
+  },
+
+  result: () => {
+    // نقاطي أنا = كم توقّعت إجابات الطرف الثاني صح
+    // نقاط الطرف الثاني = كم توقّع إجاباتي أنا صح
+    const myScore = scoreOf(state.predictions, state.otherSelf);
+    const otherScore = scoreOf(state.otherPred, state.answers);
+    const total = QUESTIONS.length;
+    const winner = myScore>otherScore ? state.role : otherScore>myScore ? state.otherRole : "تعادل";
+    const n=el(`
+      <div>
+        <div class="eyebrow">النتيجة</div>
+        <h1 class="title" style="font-size:24px;">مين يعرف الثاني أكثر؟</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <div class="badge">${winner==="تعادل"?"تعادل!":winner+"<br>يعرف أكثر"}</div>
+          <div style="display:flex; justify-content:space-around; margin:6px 0 20px;">
+            <div style="text-align:center;">
+              <div class="percent" style="font-size:44px;">${myScore}</div>
+              <div class="percent-label" style="margin:0;">توقعاتك عن ${state.otherRole}</div>
+            </div>
+            <div style="text-align:center;">
+              <div class="percent" style="font-size:44px;">${otherScore}</div>
+              <div class="percent-label" style="margin:0;">توقعات ${state.otherRole} عنك</div>
+            </div>
+          </div>
+          <p class="qhint" style="margin-bottom:18px;">من أصل ${total} لكل واحد</p>
+          <div id="rows"></div>
+          <button class="btn ghost" id="ag" style="margin-top:20px;">لعبة جديدة</button>
+        </div>
+      </div>`);
+    const rows=n.querySelector("#rows");
+    QUESTIONS.forEach(q=>{
+      const myPred=state.predictions.find(x=>x.id===q.id);
+      const theirActual=state.otherSelf.find(x=>x.id===q.id);
+      const ok = myPred && theirActual && myPred.choice===theirActual.choice;
+      const predLabel = myPred ? q[myPred.choice] : "—";
+      const actualLabel = theirActual ? q[theirActual.choice] : "—";
+      rows.appendChild(el(`
+        <div class="result-row">
+          <div class="rr-top">
+            <span class="rr-q">${otherText(q, state.otherRole)}</span>
+            <span class="mark ${ok?'yes':'no'}">${ok?'✓':'✕'}</span>
+          </div>
+          <div class="rr-detail">توقعت: ${predLabel} — والصح: ${actualLabel}</div>
+        </div>`));
+    });
+    n.querySelector("#ag").onclick=()=>{
+      state={ screen:"home", code:"", role:"", otherRole:"", qIndex:0, answers:[], predictions:[] };
+      render();
+    };
+    return n;
+  }
+};
+
+function scoreOf(preds, actuals){
+  if(!preds || !actuals) return 0;
+  let s=0;
+  QUESTIONS.forEach(q=>{
+    const p=preds.find(x=>x.id===q.id);
+    const a=actuals.find(x=>x.id===q.id);
+    if(p && a && p.choice===a.choice) s++;
+  });
+  return s;
+}
+
+// صياغة نص السؤال بصيغة المخاطب (عن نفسك)
+function selfText(q, role){
+  return q.text
+    .replace(/لو صحّى من النوم وقت ما يبي، متى يقوم؟/, "لو تصحى وقت ما تبي، متى تقوم؟")
+    .replace(/^لو دخل مطعم لأول مرة، إيش يطلب؟/, "لو دخلت مطعم لأول مرة، إيش تطلب؟")
+    .replace(/^وقت الزعل، إيش طبعه؟/, "وقت الزعل، إيش طبعك؟")
+    .replace(/^لو ربح مبلغ فجأة، وش يسوي فيه؟/, "لو ربحت مبلغ فجأة، وش تسوي فيه؟")
+    .replace(/^إيش يحب أكثر بالآخر؟/, "إيش تحب أكثر بالثاني؟")
+    .replace(/^لو نختار فلم نشوفه سوا، وش يميل له؟/, "لو نختار فلم سوا، وش تميل له؟")
+    .replace(/^طريقته بالرد على الرسائل:/, "طريقتك بالرد على الرسائل:")
+    .replace(/^لو نسافر، مين يرتّب البرنامج؟/, "لو نسافر، تحب مين يرتّب البرنامج؟ أنت:")
+    .replace(/^إيش يفرّح قلبه بسرعة؟/, "إيش يفرّح قلبك بسرعة؟")
+    .replace(/^آخر اليوم، وش يريّحه أكثر؟/, "آخر اليوم، وش يريّحك أكثر؟");
+}
+// صياغة نص السؤال عن الطرف الثاني (بصيغته)
+function otherText(q, role){
+  const f = role==="جوري";
+  let t = q.text;
+  if(f){
+    t = t
+      .replace(/يبي/,"تبي").replace(/يقوم/,"تقوم")
+      .replace(/^لو دخل/,"لو دخلت").replace(/يطلب/,"تطلب")
+      .replace(/طبعه/,"طبعها")
+      .replace(/^لو ربح/,"لو ربحت").replace(/يسوي/,"تسوي")
+      .replace(/يحب/,"تحب")
+      .replace(/يميل/,"تميل")
+      .replace(/طريقته/,"طريقتها")
+      .replace(/يرتّب/,"ترتّب")
+      .replace(/يفرّح قلبه/,"يفرّح قلبها")
+      .replace(/يريّحه/,"يريّحها");
+  }
+  return t;
+}
+
+function tryResult(){
+  Promise.all([
+    fetchRow(`${state.otherRole}:self`),
+    fetchRow(`${state.otherRole}:pred`)
+  ]).then(([oself, opred])=>{
+    if(oself && opred){
+      state.otherSelf=oself; state.otherPred=opred;
+      if(channel){ db.removeChannel(channel); channel=null; }
+      if(pollTimer){ clearInterval(pollTimer); pollTimer=null; }
+      state.screen="result"; render();
+    } else if(lastError){ setStatus("خطأ: "+lastError, true); }
+    else { setStatus(state.otherRole+" ما خلص بعد", false); }
+  });
+}
+
+function watchForResult(){
+  channel = db.channel("room-"+state.code)
+    .on("postgres_changes",
+      { event:"*", schema:"public", table:"game_answers", filter:`room_code=eq.${state.code}` },
+      ()=> tryResult())
+    .subscribe();
+  tryResult();
+  pollTimer=setInterval(tryResult, 3000);
+}
+
+render();
+</script>
+</body>
+</html>

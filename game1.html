@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>بيني وبينك</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7c4dff;
+    --purple-deep:#5e35d6;
+    --purple-soft:#b39ddf;
+    --coral:#ff6f91;
+    --coral-soft:#ff9eb5;
+    --sunny:#ffc24b;
+    --sunny-light:#ffd98a;
+    --ink:#3a2a5c;
+    --ink-soft:#6b5b8a;
+    --paper:#fffdfa;
+    --lav-bg:#f3ecff;
+    --cream:#3a2a5c;
+    --shadow: 0 18px 44px rgba(124,77,255,0.20);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; min-height:100vh;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(255,111,145,0.18), transparent 45%),
+      radial-gradient(ellipse at 85% 10%, rgba(255,194,75,0.18), transparent 45%),
+      radial-gradient(ellipse at 50% 110%, rgba(124,77,255,0.20), transparent 55%),
+      var(--lav-bg);
+    color:var(--ink); font-family:'Tajawal', sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px 16px; overflow-x:hidden;
+  }
+  .stage{ width:100%; max-width:440px; }
+  .eyebrow{ text-align:center; font-family:'Amiri',serif; font-style:italic; color:var(--ink-soft); font-size:15px; letter-spacing:1px; margin-bottom:6px; }
+  h1.title{ text-align:center; font-family:'Amiri',serif; font-weight:700; font-size:38px; color:var(--purple); margin:0 0 4px; text-shadow:0 2px 12px rgba(124,77,255,0.18); }
+  .divider{ display:flex; align-items:center; justify-content:center; gap:10px; margin:18px 0 26px; color:var(--ink-soft); }
+  .divider::before,.divider::after{ content:""; flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--ink-soft),transparent); }
+  .divider span{ font-size:13px; }
+  .card{
+    background:linear-gradient(160deg, var(--paper), var(--paper));
+    border:1px solid rgba(124,77,255,0.20); border-radius:20px;
+    padding:30px 24px; box-shadow:var(--shadow); position:relative;
+    animation:rise .5s ease both;
+  }
+  .card::before{ content:""; position:absolute; inset:6px; border:1px solid rgba(124,77,255,0.12); border-radius:14px; pointer-events:none; }
+  @keyframes rise{ from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+  .subtext{ text-align:center; opacity:.8; font-size:14.5px; line-height:1.9; margin:0 0 22px; }
+  .btn{
+    display:block; width:100%;
+    background:linear-gradient(135deg,var(--coral),var(--purple));
+    color:#fff; border:none; border-radius:14px;
+    font-family:'Tajawal',sans-serif; font-weight:700; font-size:16.5px;
+    padding:16px; margin-top:14px; cursor:pointer;
+    transition:transform .15s ease; box-shadow:0 8px 18px rgba(255,111,145,0.30);
+  }
+  .btn:active{ transform:scale(.97); }
+  .btn:disabled{ opacity:.5; }
+  .btn.ghost{ background:transparent; color:var(--purple); border:1.5px solid var(--ink-soft); box-shadow:none; }
+  .btn.wide-option{ background:rgba(124,77,255,0.05); color:var(--ink); border:1.5px solid rgba(124,77,255,0.30); text-align:right; font-weight:500; box-shadow:none; }
+  .btn.wide-option:active{ background:rgba(124,77,255,0.12); }
+  input.code-input{
+    width:100%; text-align:center; letter-spacing:10px;
+    font-size:26px; font-family:'Amiri',serif; font-weight:700;
+    background:rgba(124,77,255,0.06); color:var(--purple);
+    border:1.5px solid var(--ink-soft); border-radius:14px; padding:14px; margin-bottom:6px;
+  }
+  input.code-input::placeholder{ color:rgba(232,213,160,.35); letter-spacing:4px; font-size:16px; }
+  .code-display{ text-align:center; font-family:'Amiri',serif; font-weight:700; font-size:44px; letter-spacing:14px; color:var(--purple); margin:6px 0 18px; text-shadow:0 2px 14px rgba(124,77,255,0.20); }
+  .progress-label{ font-size:13px; color:var(--ink-soft); font-family:'Amiri',serif; font-style:italic; }
+  .progress-track{ height:5px; background:rgba(124,77,255,0.12); border-radius:6px; overflow:hidden; margin:10px 0 22px; }
+  .progress-fill{ height:100%; background:linear-gradient(90deg,var(--purple),var(--coral)); transition:width .4s ease; }
+  .qtext{ font-size:20px; line-height:1.7; text-align:center; margin:6px 0 26px; }
+  .badge{
+    width:96px; height:96px; margin:0 auto 18px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--sunny-light), var(--coral) 55%, var(--purple));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 30px rgba(255,194,75,0.35), inset 0 2px 6px rgba(255,255,255,.3);
+    font-family:'Amiri',serif; font-style:italic; font-size:15px; color:var(--paper); font-weight:700;
+  }
+  .percent{ text-align:center; font-family:'Amiri',serif; font-weight:700; font-size:64px; color:var(--purple); margin:6px 0 2px; text-shadow:0 4px 20px rgba(255,194,75,0.35); }
+  .percent-label{ text-align:center; font-size:14px; color:var(--ink-soft); font-family:'Amiri',serif; font-style:italic; margin-bottom:22px; }
+  .result-row{ display:flex; align-items:center; justify-content:space-between; padding:12px 4px; border-bottom:1px solid rgba(124,77,255,0.10); font-size:14px; }
+  .result-row:last-child{ border-bottom:none; }
+  .result-q{ flex:1; opacity:.85; padding-left:10px; }
+  .mark{ font-size:17px; }
+  .mark.yes{ color:var(--coral); }
+  .mark.no{ color:var(--coral); }
+  .waiting-dots{ text-align:center; font-size:30px; color:var(--coral); letter-spacing:6px; margin:10px 0 4px; animation:pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:.35;} 50%{opacity:1;} }
+  .error-note{ text-align:center; font-size:13px; color:var(--coral); margin:-6px 0 14px; min-height:16px; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://ajwpuafvxkprvyoxqysu.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqd3B1YWZ2eGtwcnZ5b3hxeXN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1OTYyNzAsImV4cCI6MjEwMDE3MjI3MH0.lzdyrIJnQhO7dFhcm00yVB-eLW8FFhZM46EepyFcv-o";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const QUESTIONS = [
+  {id:1, text:"إيش أكثر شي يخليك تحس بقربنا؟", a:"مكالماتنا الطويلة", b:"رسايلنا طول اليوم"},
+  {id:2, text:"وش اللي يطمّنك أكثر في علاقتنا؟", a:"إحساسي إني مفهوم", b:"إحساسي إني آمن ومستقر"},
+  {id:3, text:"أكثر لحظة تشتاق لها بيننا:", a:"أول ما نسمع صوت بعض", b:"سكوتنا المريح مع بعض"},
+  {id:4, text:"وش يعبّر عن حبك لي أكثر؟", a:"إني أقولها بصوتي", b:"إني أهتم بتفاصيلك"},
+  {id:5, text:"لو زعلت منّي، وش تتمنى مني؟", a:"أبادر وأطمنك بسرعة", b:"أعطيك وقت وبعدها نحكي"},
+  {id:6, text:"أكثر شي يفرحك أستقبله مني فجأة:", a:"مكالمة من غير موعد", b:"كلمة حب مكتوبة"},
+  {id:7, text:"وش يقرّبنا أكثر ونحن بعيد؟", a:"نتشارك يومنا بالتفصيل", b:"نسوي شي ممتع سوا عن بعد"},
+  {id:8, text:"إيش أكثر شي تحبه في طبعي؟", a:"حنيّتي واهتمامي", b:"ونّتي وضحكتي"},
+  {id:9, text:"لو نقضي سهرة سوا، وش تفضل؟", a:"نحكي عن مستقبلنا", b:"نتسولف ونضحك على أشياء خفيفة"},
+  {id:10, text:"وش يشعرك إني أفكر فيك؟", a:"إني أسأل عنك أول بأول", b:"إني أذكر تفاصيل قلتها لي"},
+  {id:11, text:"أكثر شي تتطلع له في زواجنا الجاي:", a:"إننا نعيش سوا كل يوم", b:"إننا نبني عيلتنا"},
+  {id:12, text:"وش يخليك تحس إني أفتخر فيك؟", a:"إني أمدحك قدام الناس", b:"إني أثق فيك وأعتمد عليك"},
+  {id:13, text:"وقت تحسّ بضعف، وش تبي مني؟", a:"أسمعك بدون ما أحكم عليك", b:"أحضنك وأقوّيك"},
+  {id:14, text:"أحلى شي ممكن نسويه بعد فرحنا:", a:"نسافر ونعيش شهر عسل", b:"نرتّب بيتنا ونستقر"},
+  {id:15, text:"وش أكثر شي يخليك متأكد من حبي؟", a:"ثباتي معك بكل الظروف", b:"صراحتي وصدق كلامي"}
+];
+
+let state = { screen:"home", code:"", role:"", otherRole:"", qIndex:0, answers:[] };
+let channel = null, pollTimer = null;
+
+const el = h => { const d=document.createElement("div"); d.innerHTML=h.trim(); return d.firstChild; };
+const genCode = () => String(Math.floor(1000+Math.random()*9000));
+const render = () => { const s=document.getElementById("stage"); s.innerHTML=""; s.appendChild(SCREENS[state.screen]()); };
+
+let lastError = "";
+
+async function saveAnswers(){
+  const { error } = await db.from("game_answers")
+    .upsert({ room_code: state.code, player: state.role, answers: state.answers },
+            { onConflict: "room_code,player" });
+  if(error){ lastError = error.message; return false; }
+  lastError = "";
+  return true;
+}
+
+async function fetchOther(){
+  const { data, error } = await db.from("game_answers")
+    .select("answers").eq("room_code", state.code).eq("player", state.otherRole).maybeSingle();
+  if(error){ lastError = error.message; return null; }
+  return data ? data.answers : null;
+}
+
+async function roleTaken(code, role){
+  const { data } = await db.from("game_answers")
+    .select("player").eq("room_code", code).eq("player", role).maybeSingle();
+  return !!data;
+}
+
+function setStatus(msg, isError){
+  const s = document.getElementById("statusLine");
+  if(s){ s.textContent = msg || ""; s.style.color = isError ? "var(--coral)" : "var(--ink-soft)"; }
+}
+
+function finishWith(other){
+  if(state.screen === "result") return;
+  state.myAnswers = state.answers;
+  state.otherAnswers = other;
+  state.screen = "result";
+  if(channel){ db.removeChannel(channel); channel = null; }
+  if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+  render();
+}
+
+function watchForPartner(){
+  channel = db.channel("room-"+state.code)
+    .on("postgres_changes",
+      { event:"*", schema:"public", table:"game_answers", filter:`room_code=eq.${state.code}` },
+      payload => { if(payload.new && payload.new.player === state.otherRole) finishWith(payload.new.answers); })
+    .subscribe();
+
+  const check = async () => {
+    const o = await fetchOther();
+    if(o) finishWith(o);
+    else if(lastError) setStatus("خطأ في الاتصال: " + lastError, true);
+    else setStatus(state.otherRole + " ما خلص بعد", false);
+  };
+  check();
+  pollTimer = setInterval(check, 3000);
+}
+
+const SCREENS = {
+  home: () => {
+    const n = el(`
+      <div>
+        <div class="eyebrow">هادي و جوري</div>
+        <h1 class="title">بيني وبينك</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <p class="subtext">جاوبوا كل واحد من جواله، وشوفوا نسبة توافقكم.</p>
+          <button class="btn" id="a">ابدأ لعبة جديدة</button>
+          <button class="btn ghost" id="b">عندي كود، بدخل للعبة</button>
+        </div>
+      </div>`);
+    n.querySelector("#a").onclick = ()=>{ state.screen="chooseRole"; render(); };
+    n.querySelector("#b").onclick = ()=>{ state.screen="joinCode"; render(); };
+    return n;
+  },
+
+  chooseRole: () => {
+    const n = el(`
+      <div>
+        <div class="eyebrow">قبل ما نبدأ</div>
+        <h1 class="title">مين أنت؟</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <button class="btn wide-option" data-role="هادي">هادي</button>
+          <button class="btn wide-option" data-role="جوري">جوري</button>
+        </div>
+      </div>`);
+    n.querySelectorAll("[data-role]").forEach(b=> b.onclick = ()=>{
+      state.role = b.dataset.role;
+      state.otherRole = state.role==="هادي" ? "جوري" : "هادي";
+      state.code = genCode();
+      state.screen = "showCode"; render();
+    });
+    return n;
+  },
+
+  showCode: () => {
+    const n = el(`
+      <div>
+        <div class="eyebrow">أرسل هذا الكود لـ ${state.otherRole}</div>
+        <h1 class="title">كود اللعبة</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <div class="code-display">${state.code}</div>
+          <p class="subtext">تقدر تبدأ من الآن، ما تحتاج تنتظره.</p>
+          <button class="btn" id="s">ابدأ الأسئلة</button>
+        </div>
+      </div>`);
+    n.querySelector("#s").onclick = ()=>{ state.qIndex=0; state.answers=[]; state.screen="question"; render(); };
+    return n;
+  },
+
+  joinCode: () => {
+    const n = el(`
+      <div>
+        <div class="eyebrow">الانضمام للعبة</div>
+        <h1 class="title">أدخل الكود</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <input class="code-input" id="ci" maxlength="4" inputmode="numeric" placeholder="0000">
+          <div class="error-note" id="er"></div>
+          <button class="btn wide-option" data-role="هادي">أنا هادي</button>
+          <button class="btn wide-option" data-role="جوري">أنا جوري</button>
+          <button class="btn ghost" id="bk">رجوع</button>
+        </div>
+      </div>`);
+    n.querySelector("#bk").onclick = ()=>{ state.screen="home"; render(); };
+    n.querySelectorAll("[data-role]").forEach(b=> b.onclick = async ()=>{
+      const code = n.querySelector("#ci").value.trim();
+      if(code.length !== 4){ n.querySelector("#er").textContent = "أدخل كود من 4 أرقام"; return; }
+      const role = b.dataset.role;
+      n.querySelector("#er").textContent = "جاري التحقق...";
+      if(await roleTaken(code, role)){
+        n.querySelector("#er").textContent = role + " مسجّل بهذي اللعبة، اختر الاسم الثاني";
+        return;
+      }
+      state.code = code;
+      state.role = role;
+      state.otherRole = role==="هادي" ? "جوري" : "هادي";
+      state.qIndex=0; state.answers=[];
+      state.screen="question"; render();
+    });
+    return n;
+  },
+
+  question: () => {
+    const q = QUESTIONS[state.qIndex];
+    const pct = Math.round(state.qIndex/QUESTIONS.length*100);
+    const n = el(`
+      <div>
+        <div class="eyebrow">${state.role}</div>
+        <h1 class="title" style="font-size:28px;">بيني وبينك</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <span class="progress-label">سؤال ${state.qIndex+1} من ${QUESTIONS.length}</span>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <p class="qtext">${q.text}</p>
+          <button class="btn wide-option" data-c="a">${q.a}</button>
+          <button class="btn wide-option" data-c="b">${q.b}</button>
+        </div>
+      </div>`);
+    n.querySelectorAll("[data-c]").forEach(b=> b.onclick = async ()=>{
+      state.answers.push({id:q.id, choice:b.dataset.c});
+      if(state.qIndex < QUESTIONS.length-1){ state.qIndex++; render(); }
+      else {
+        b.disabled = true;
+        const ok = await saveAnswers();
+        state.screen = "waiting"; render();
+        if(!ok) setStatus("ما انحفظت إجاباتك: " + lastError, true);
+        watchForPartner();
+      }
+    });
+    return n;
+  },
+
+  waiting: () => {
+    const n = el(`
+    <div>
+      <div class="eyebrow">خلصت أسئلتك يا ${state.role}</div>
+      <h1 class="title" style="font-size:26px;">بانتظار ${state.otherRole}</h1>
+      <div class="divider"><span>♦</span></div>
+      <div class="card">
+        <div class="waiting-dots">• • •</div>
+        <p class="subtext">كود اللعبة: <b style="color:var(--purple)">${state.code}</b><br>أول ما يخلص، تطلع النتيجة تلقائياً.</p>
+        <div class="error-note" id="statusLine"></div>
+        <button class="btn ghost" id="rf">تحديث الآن</button>
+      </div>
+    </div>`);
+    n.querySelector("#rf").onclick = async ()=>{
+      setStatus("جاري التحقق...", false);
+      const o = await fetchOther();
+      if(o) finishWith(o);
+      else setStatus(lastError ? ("خطأ: "+lastError) : (state.otherRole+" ما خلص بعد"), !!lastError);
+    };
+    return n;
+  },
+
+  result: () => {
+    let matches = 0;
+    const rows = QUESTIONS.map(q=>{
+      const m = state.myAnswers.find(x=>x.id===q.id);
+      const o = state.otherAnswers.find(x=>x.id===q.id);
+      const ok = m && o && m.choice === o.choice;
+      if(ok) matches++;
+      return {q, ok};
+    });
+    const percent = Math.round(matches/QUESTIONS.length*100);
+    const n = el(`
+      <div>
+        <div class="eyebrow">النتيجة النهائية</div>
+        <h1 class="title" style="font-size:26px;">هادي × جوري</h1>
+        <div class="divider"><span>♦</span></div>
+        <div class="card">
+          <div class="badge">توافق</div>
+          <div class="percent">${percent}%</div>
+          <div class="percent-label">تطابقتم في ${matches} من ${QUESTIONS.length}</div>
+          <div id="rows"></div>
+          <button class="btn ghost" id="ag">لعبة جديدة</button>
+        </div>
+      </div>`);
+    const r = n.querySelector("#rows");
+    rows.forEach(x=> r.appendChild(el(`
+      <div class="result-row">
+        <span class="result-q">${x.q.text}</span>
+        <span class="mark ${x.ok?'yes':'no'}">${x.ok?'✓':'✕'}</span>
+      </div>`)));
+    n.querySelector("#ag").onclick = ()=>{
+      state = { screen:"home", code:"", role:"", otherRole:"", qIndex:0, answers:[] };
+      render();
+    };
+    return n;
+  }
+};
+
+render();
+</script>
+</body>
+</html>

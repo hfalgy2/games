@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>هادي و جوري</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7c4dff; --purple-deep:#5e35d6;
+    --coral:#ff6f91; --coral-soft:#ff9eb5;
+    --sunny:#ffc24b; --sunny-light:#ffd98a;
+    --mint:#3ec7b0;
+    --ink:#3a2a5c; --ink-soft:#6b5b8a;
+    --paper:#fffdfa; --lav-bg:#f3ecff;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(255,111,145,0.22), transparent 40%),
+      radial-gradient(circle at 88% 12%, rgba(255,194,75,0.22), transparent 42%),
+      radial-gradient(circle at 50% 108%, rgba(124,77,255,0.24), transparent 55%),
+      var(--lav-bg);
+    color:var(--ink); font-family:'Tajawal',sans-serif;
+    padding:0 18px; overflow-x:hidden;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .blob{ position:fixed; border-radius:50%; filter:blur(2px); opacity:.5; pointer-events:none; z-index:0; }
+  .blob.b1{ width:90px; height:90px; background:var(--coral-soft); top:16%; left:-24px; animation:float1 7s ease-in-out infinite; }
+  .blob.b2{ width:60px; height:60px; background:var(--sunny); top:60%; right:-16px; animation:float2 6s ease-in-out infinite; }
+  .blob.b3{ width:46px; height:46px; background:var(--purple); bottom:8%; left:14%; opacity:.35; animation:float1 8s ease-in-out infinite; }
+  @keyframes float1{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
+  @keyframes float2{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(16px)} }
+  .wrap{ width:100%; max-width:480px; position:relative; z-index:1; padding:52px 0 60px; }
+  .hero{ text-align:center; margin-bottom:40px; animation:pop .55s cubic-bezier(.34,1.56,.64,1) both; }
+  .names{ font-family:'Amiri',serif; font-weight:700; font-size:52px; line-height:1.1; color:var(--purple-deep); display:inline-block; }
+  .names .amp{ display:block; font-size:26px; color:var(--coral); margin:2px 0; font-style:italic; }
+  .tag{ margin-top:16px; font-size:15px; color:var(--ink-soft); font-weight:500; background:var(--paper); display:inline-block; padding:8px 18px; border-radius:40px; box-shadow:0 6px 18px rgba(124,77,255,.14); }
+  .grid-label{ display:flex; align-items:center; gap:12px; margin:0 4px 18px; color:var(--ink-soft); font-family:'Amiri',serif; font-weight:700; font-size:16px; }
+  .grid-label::after{ content:""; flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg, var(--purple), transparent); }
+  .tiles{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .tile{ position:relative; aspect-ratio:1/1; border-radius:26px; text-decoration:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; color:#fff; overflow:hidden; isolation:isolate; box-shadow:0 14px 30px rgba(124,77,255,.22); transition:transform .2s cubic-bezier(.34,1.56,.64,1); animation:pop .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .tile:active{ transform:scale(.95); }
+  .tile:nth-child(1){ animation-delay:.1s; background:linear-gradient(150deg, var(--coral), var(--purple)); }
+  .tile:nth-child(2){ animation-delay:.18s; background:linear-gradient(150deg, var(--sunny), var(--coral)); }
+  .tile:nth-child(3){ animation-delay:.26s; background:linear-gradient(150deg, var(--mint), var(--purple)); }
+  .tile:nth-child(4){ animation-delay:.34s; background:linear-gradient(150deg, var(--purple), var(--coral)); }
+  .tile .num{ font-family:'Amiri',serif; font-weight:700; font-size:64px; line-height:1; text-shadow:0 4px 14px rgba(0,0,0,.15); }
+  .tile .glyph{ position:absolute; font-size:120px; opacity:.14; bottom:-24px; left:-10px; transform:rotate(-12deg); }
+  .tile .go{ font-size:13px; font-weight:700; background:rgba(255,255,255,.25); padding:6px 16px; border-radius:30px; backdrop-filter:blur(4px); }
+  .tile.add{ background:var(--paper); color:var(--ink-soft); border:2px dashed rgba(124,77,255,.3); box-shadow:none; }
+  .tile.add .plus{ font-size:44px; line-height:1; color:var(--purple); }
+  .tile.add .lbl{ font-size:13px; font-weight:500; }
+  .foot{ text-align:center; margin-top:34px; font-family:'Amiri',serif; font-style:italic; color:var(--ink-soft); font-size:14px; opacity:.9; }
+  .foot .heart{ color:var(--coral); }
+  @keyframes pop{ from{opacity:0; transform:translateY(16px) scale(.96);} to{opacity:1; transform:translateY(0) scale(1);} }
+  @media (max-width:360px){ .names{ font-size:44px; } .tile .num{ font-size:52px; } }
+</style>
+</head>
+<body>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="wrap">
+    <div class="hero">
+      <div class="names">هادي<span class="amp">&amp;</span>جوري</div>
+      <div class="tag">مساحتنا الخاصة ✦ نلعب ونتعرّف أكثر</div>
+    </div>
+    <div class="grid-label">اختر</div>
+    <div class="tiles" id="tiles"></div>
+    <div class="foot">صُنعت لنا نحن <span class="heart">♥</span></div>
+  </div>
+<script>
+const GAMES = [
+  { file:"game1.html",   num:"١", glyph:"♥" },
+  { file:"index_1.html", num:"٢", glyph:"✦" }
+  // ,{ file:"game3.html", num:"٣", glyph:"❈" }
+];
+const wrap = document.getElementById("tiles");
+GAMES.forEach(g=>{
+  const a = document.createElement("a");
+  a.className = "tile"; a.href = g.file;
+  a.innerHTML = `<span class="glyph">${g.glyph}</span><span class="num">${g.num}</span><span class="go">ابدأ ‹</span>`;
+  wrap.appendChild(a);
+});
+if(GAMES.length % 2 === 1){
+  const add = document.createElement("div");
+  add.className = "tile add";
+  add.innerHTML = `<span class="plus">+</span><span class="lbl">قريباً</span>`;
+  wrap.appendChild(add);
+}
+</script>
+</body>
+</html>
