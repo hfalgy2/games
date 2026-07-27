@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>عجلة اليوم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7c4dff; --purple-deep:#5e35d6;
+    --coral:#ff6f91; --coral-soft:#ff9eb5;
+    --sunny:#ffc24b; --sunny-light:#ffd98a;
+    --mint:#3ec7b0;
+    --ink:#3a2a5c; --ink-soft:#6b5b8a;
+    --paper:#fffdfa; --lav-bg:#f3ecff;
+    --shadow:0 18px 44px rgba(124,77,255,0.20);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(255,111,145,0.20), transparent 42%),
+      radial-gradient(circle at 88% 10%, rgba(255,194,75,0.20), transparent 44%),
+      radial-gradient(circle at 50% 110%, rgba(124,77,255,0.22), transparent 55%),
+      var(--lav-bg);
+    color:var(--ink); font-family:'Tajawal',sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    padding:28px 16px; overflow-x:hidden;
+  }
+  .stage{ width:100%; max-width:440px; text-align:center; }
+  .eyebrow{ font-family:'Amiri',serif; font-style:italic; color:var(--ink-soft); font-size:15px; margin-bottom:4px; }
+  h1.title{ font-family:'Amiri',serif; font-weight:700; font-size:38px; color:var(--purple-deep); margin:0 0 6px; }
+  .sub{ color:var(--ink-soft); font-size:14px; margin-bottom:24px; }
+  .count-pill{ display:inline-block; font-size:13px; color:var(--ink-soft); background:var(--paper); padding:6px 16px; border-radius:30px; box-shadow:0 4px 14px rgba(124,77,255,.12); margin-bottom:20px; }
+
+  .wheel-wrap{ position:relative; width:300px; height:300px; margin:0 auto 10px; }
+  .pointer{ position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent; border-top:26px solid var(--purple-deep); z-index:4; filter:drop-shadow(0 3px 4px rgba(0,0,0,.2)); }
+  .wheel{ width:300px; height:300px; border-radius:50%; box-shadow:0 16px 40px rgba(124,77,255,.3), 0 0 0 10px #fff, 0 0 0 12px rgba(124,77,255,.2); transition:transform 5s cubic-bezier(.17,.67,.12,.99); }
+  .hub{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:64px; height:64px; border-radius:50%; z-index:3; background:radial-gradient(circle at 35% 30%, var(--sunny-light), var(--coral) 60%, var(--purple)); box-shadow:0 6px 16px rgba(0,0,0,.2), inset 0 2px 5px rgba(255,255,255,.4); display:flex; align-items:center; justify-content:center; color:#fff; font-size:26px; }
+
+  .btn{ display:inline-block; width:100%; max-width:320px; background:linear-gradient(135deg,var(--coral),var(--purple)); color:#fff; border:none; border-radius:16px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:18px; padding:17px; margin-top:22px; cursor:pointer; transition:transform .15s ease; box-shadow:0 10px 24px rgba(255,111,145,.35); }
+  .btn:active{ transform:scale(.97); }
+  .btn:disabled{ opacity:.45; cursor:default; box-shadow:none; }
+  .btn.wide-option{ background:var(--paper); color:var(--ink); border:1.5px solid rgba(124,77,255,.3); box-shadow:0 6px 16px rgba(124,77,255,.1); font-weight:700; margin-top:14px; }
+
+  .result{ background:var(--paper); border-radius:22px; padding:26px 22px; margin-top:24px; box-shadow:var(--shadow); border:1px solid rgba(124,77,255,.14); animation:pop .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .result .kind{ display:inline-block; font-family:'Amiri',serif; font-weight:700; font-size:13px; color:#fff; padding:5px 16px; border-radius:30px; margin-bottom:14px; }
+  .kind.task{ background:linear-gradient(135deg,var(--sunny),var(--coral)); }
+  .kind.q{ background:linear-gradient(135deg,var(--mint),var(--purple)); }
+  .result .text{ font-size:20px; line-height:1.7; color:var(--ink); margin-bottom:18px; }
+  .copy-btn{ background:rgba(124,77,255,.1); color:var(--purple-deep); border:1.5px solid rgba(124,77,255,.3); border-radius:12px; font-family:'Tajawal',sans-serif; font-weight:700; font-size:14px; padding:11px 20px; cursor:pointer; transition:transform .15s ease; }
+  .copy-btn:active{ transform:scale(.96); }
+
+  .locked{ background:var(--paper); border-radius:22px; padding:30px 22px; margin-top:24px; box-shadow:var(--shadow); border:1px solid rgba(124,77,255,.14); animation:pop .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .locked .lock-icon{ font-size:34px; margin-bottom:8px; }
+  .locked .lmsg{ color:var(--ink-soft); font-size:15px; margin-bottom:16px; line-height:1.7; }
+  .countdown{ font-family:'Amiri',serif; font-weight:700; font-size:40px; color:var(--purple-deep); letter-spacing:2px; }
+  .cd-label{ font-size:12.5px; color:var(--ink-soft); margin-top:4px; }
+  .done-emoji{ font-size:40px; margin-bottom:10px; }
+
+  .foot{ margin-top:24px; font-family:'Amiri',serif; font-style:italic; color:var(--ink-soft); font-size:13.5px; opacity:.9; }
+  .err{ color:var(--coral); font-size:13px; margin-top:12px; min-height:16px; }
+  @keyframes pop{ from{opacity:0; transform:translateY(14px) scale(.97);} to{opacity:1; transform:translateY(0) scale(1);} }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="eyebrow">هادي و جوري</div>
+  <h1 class="title">عجلة اليوم</h1>
+  <p class="sub">لفّة وحدة كل يوم — نلفّها ونتدردش عنها</p>
+  <div id="app"></div>
+  <div class="foot">تتفعّل لفّة جديدة بعد ٢٤ ساعة</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://ajwpuafvxkprvyoxqysu.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqd3B1YWZ2eGtwcnZ5b3hxeXN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1OTYyNzAsImV4cCI6MjEwMDE3MjI3MH0.lzdyrIJnQhO7dFhcm00yVB-eLW8FFhZM46EepyFcv-o";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ===== ٣٠ سؤال/مهمة — عدّل بحرية. kind: 'task' مهمة، 'q' سؤال =====
+const ITEMS = [
+  { kind:"q",    text:"وش أول لحظة حسّيت فيها إنك ارتحت لي؟" },
+  { kind:"task", text:"أرسل لي صوتية تقول فيها أكثر شي عجبك فيّ اليوم." },
+  { kind:"q",    text:"لو نعيد أول مكالمة بيننا، وش تتمنى تقول لي فيها؟" },
+  { kind:"task", text:"اكتب لي ٣ أشياء تحبها فيّ وما قلتها من قبل." },
+  { kind:"q",    text:"وش أكثر عادة صغيرة عندي تفرّحك؟" },
+  { kind:"task", text:"صف يومك المثالي معي بجملة وحدة." },
+  { kind:"q",    text:"وش الشي اللي تتمنى نسوّيه سوا أول ما نلتقي؟" },
+  { kind:"task", text:"أرسل لي أغنية تذكّرك فيّ وقول ليش." },
+  { kind:"q",    text:"إيش أكثر شي تفتخر فيه في علاقتنا؟" },
+  { kind:"task", text:"اكتب لي رسالة قصيرة كأنها من سنة من الحين." },
+  { kind:"q",    text:"وش الشي اللي أسويه ويطمّن قلبك؟" },
+  { kind:"task", text:"قول لي شي تتمناه لنا ما قلته من قبل." },
+  { kind:"q",    text:"لو توصف علاقتنا بكلمة وحدة، وش تكون؟" },
+  { kind:"task", text:"أرسل لي صورة شي حولك ذكّرك فيّ الحين." },
+  { kind:"q",    text:"وش أكثر شي تخاف تفقده فينا؟" },
+  { kind:"task", text:"اكتب لي أول ذكرى تجيك ببالك عنّي." },
+  { kind:"q",    text:"متى حسّيت إني أفهمك من غير ما تتكلم؟" },
+  { kind:"task", text:"قول لي جملة حب بلهجتك العامية بدون خجل." },
+  { kind:"q",    text:"وش الشي اللي تتمنى أعرفه عنك أكثر؟" },
+  { kind:"task", text:"خطّط لموعد أحلامك معي واوصفه لي بالتفصيل." },
+  { kind:"q",    text:"إيش أكثر شي يخليك تبتسم لما تفكر فيّ؟" },
+  { kind:"task", text:"أرسل لي أقدم صورة عندك وقول قصتها." },
+  { kind:"q",    text:"وش تعلّمته من نفسك بعد ما دخلت حياتي؟" },
+  { kind:"task", text:"اكتب لي وعد صغير تقدر تلتزم فيه هالأسبوع." },
+  { kind:"q",    text:"لو نسافر بكرة، وين تبي تاخذني أول مكان؟" },
+  { kind:"task", text:"قول لي ٣ أشياء ممتن لها في يومك اليوم." },
+  { kind:"q",    text:"وش الشي اللي تحسّه صعب تقوله لي بسهولة؟" },
+  { kind:"task", text:"صمّم لنا شعار أو اسم دلع لعلاقتنا واكتبه لي." },
+  { kind:"q",    text:"إيش أكثر لحظة تمنيت فيها إني جنبك؟" },
+  { kind:"task", text:"اكتب لي كيف تتخيّل بيتنا أول ما نعيش سوا." }
+];
+
+const COLORS = ["#ff6f91","#7c4dff","#ffc24b","#3ec7b0","#ff9eb5","#5e35d6"];
+const SLICES_ON_WHEEL = 12;   // شرائح بصرية فقط
+const COOLDOWN = 24*60*60*1000;
+const TOTAL = ITEMS.length;
+
+const app = document.getElementById("app");
+let role = null;
+let progress = { used:[], last_spin:null, last_index:null };
+let cdTimer = null, spinning = false;
+let wheelRotation = 0;
+
+function el(h){ const d=document.createElement("div"); d.innerHTML=h.trim(); return d.firstChild; }
+
+// ===== Supabase =====
+async function loadProgress(){
+  const { data, error } = await db.from("wheel_progress").select("*").eq("player", role).maybeSingle();
+  if(error){ return {error:error.message}; }
+  if(data){
+    progress = { used:data.used_indexes||[], last_spin:data.last_spin?new Date(data.last_spin).getTime():null, last_index:data.last_index };
+  } else {
+    // أول مرة لهذا اللاعب
+    await db.from("wheel_progress").insert({ player:role, used_indexes:[], last_spin:null, last_index:null });
+    progress = { used:[], last_spin:null, last_index:null };
+  }
+  return {};
+}
+async function saveProgress(){
+  const { error } = await db.from("wheel_progress")
+    .update({ used_indexes:progress.used, last_spin:new Date(progress.last_spin).toISOString(), last_index:progress.last_index })
+    .eq("player", role);
+  return error ? error.message : "";
+}
+
+// ===== رسم العجلة =====
+function drawWheel(wheelEl){
+  const cx=50,cy=50,r=50; let html="";
+  for(let i=0;i<SLICES_ON_WHEEL;i++){
+    const a0=(i/SLICES_ON_WHEEL)*2*Math.PI - Math.PI/2;
+    const a1=((i+1)/SLICES_ON_WHEEL)*2*Math.PI - Math.PI/2;
+    const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0);
+    const x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+    html+=`<path d="M${cx},${cy} L${x0.toFixed(2)},${y0.toFixed(2)} A${r},${r} 0 0,1 ${x1.toFixed(2)},${y1.toFixed(2)} Z" fill="${COLORS[i%COLORS.length]}"/>`;
+    const am=(a0+a1)/2, sx=cx+(r*0.62)*Math.cos(am), sy=cy+(r*0.62)*Math.sin(am);
+    html+=`<text x="${sx.toFixed(2)}" y="${sy.toFixed(2)}" fill="#fff" font-size="7" font-weight="bold" text-anchor="middle" dominant-baseline="central" opacity="0.9">${i%2?"?":"✎"}</text>`;
+  }
+  wheelEl.innerHTML=html;
+}
+
+function fmt(ms){ const t=Math.max(0,ms); const h=String(Math.floor(t/3600000)).padStart(2,"0"); const m=String(Math.floor(t%3600000/60000)).padStart(2,"0"); const s=String(Math.floor(t%60000/1000)).padStart(2,"0"); return `${h}:${m}:${s}`; }
+
+// ===== الشاشات =====
+function screenRole(){
+  app.innerHTML="";
+  app.appendChild(el(`
+    <div>
+      <p class="sub" style="margin-bottom:6px;">مين يلعب الحين؟</p>
+      <button class="btn wide-option" data-r="هادي">هادي</button>
+      <button class="btn wide-option" data-r="جوري">جوري</button>
+      <div class="err" id="err"></div>
+    </div>`));
+  app.querySelectorAll("[data-r]").forEach(b=> b.onclick=async ()=>{
+    role=b.dataset.r;
+    b.disabled=true;
+    document.getElementById("err").textContent="جاري التحميل...";
+    const res=await loadProgress();
+    if(res.error){ document.getElementById("err").textContent="خطأ: "+res.error; b.disabled=false; return; }
+    renderMain();
+  });
+}
+
+function wheelMarkup(){
+  return `
+    <div class="count-pill">${progress.used.length} من ${TOTAL} — باقي ${TOTAL - progress.used.length}</div>
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <svg class="wheel" id="wheel" viewBox="0 0 100 100"></svg>
+      <div class="hub">✦</div>
+    </div>
+    <div id="panel"></div>`;
+}
+
+function renderMain(){
+  app.innerHTML="";
+  app.appendChild(el(`<div>${wheelMarkup()}</div>`));
+  const wheelEl=document.getElementById("wheel");
+  drawWheel(wheelEl);
+  // ثبّت دوران العجلة على آخر وضع
+  wheelEl.style.transition="none";
+  wheelEl.style.transform=`rotate(${wheelRotation}deg)`;
+
+  const panel=document.getElementById("panel");
+
+  // خلصت كل الأسئلة؟
+  if(progress.used.length >= TOTAL){
+    panel.appendChild(el(`
+      <div class="locked">
+        <div class="done-emoji">🎉</div>
+        <div class="lmsg">خلّصنا كل الـ${TOTAL} سؤال ومهمة!<br>عجلتك وقفت هنا — كل الأمنيات انفتحت.</div>
+      </div>`));
+    showLastResult(panel);
+    return;
+  }
+
+  // في فترة انتظار؟
+  const rem = progress.last_spin ? (progress.last_spin + COOLDOWN - Date.now()) : 0;
+  if(rem > 0){
+    renderLocked(panel, rem);
+  } else {
+    renderReady(panel);
+  }
+}
+
+function renderReady(panel){
+  panel.innerHTML=`<button class="btn" id="spin">لُفّ العجلة</button>`;
+  document.getElementById("spin").onclick=spin;
+}
+
+function renderLocked(panel, rem){
+  panel.innerHTML=`
+    <div class="locked">
+      <div class="lock-icon">⏳</div>
+      <div class="lmsg">لفّة اليوم خلصت — تتفعّل الجاية بعد:</div>
+      <div class="countdown" id="cd">${fmt(rem)}</div>
+      <div class="cd-label">ساعة : دقيقة : ثانية</div>
+    </div>`;
+  showLastResult(panel);
+  if(cdTimer) clearInterval(cdTimer);
+  cdTimer=setInterval(()=>{
+    const r = progress.last_spin + COOLDOWN - Date.now();
+    const cdEl=document.getElementById("cd");
+    if(r<=0){ clearInterval(cdTimer); renderMain(); }
+    else if(cdEl){ cdEl.textContent=fmt(r); }
+  },1000);
+}
+
+function showLastResult(panel){
+  if(progress.last_index==null) return;
+  const s=ITEMS[progress.last_index]; if(!s) return;
+  const card=el(`
+    <div class="result" style="margin-top:16px;">
+      <span class="kind ${s.kind}">${s.kind==="task"?"مهمة اليوم":"سؤال اليوم"}</span>
+      <div class="text">${s.text}</div>
+      <button class="copy-btn">انسخ عشان ترسلها ⧉</button>
+    </div>`);
+  card.querySelector(".copy-btn").onclick=async(e)=>{ try{ await navigator.clipboard.writeText(s.text); e.target.textContent="تم النسخ ✓"; }catch(_){} };
+  panel.appendChild(card);
+}
+
+function showResult(panel, idx){
+  const s=ITEMS[idx];
+  panel.innerHTML="";
+  const card=el(`
+    <div class="result">
+      <span class="kind ${s.kind}">${s.kind==="task"?"مهمة":"سؤال"}</span>
+      <div class="text">${s.text}</div>
+      <button class="copy-btn">انسخ عشان ترسلها ⧉</button>
+    </div>`);
+  card.querySelector(".copy-btn").onclick=async(e)=>{ try{ await navigator.clipboard.writeText(s.text); e.target.textContent="تم النسخ ✓"; }catch(_){} };
+  panel.appendChild(card);
+}
+
+async function spin(){
+  if(spinning) return;
+  spinning=true;
+  const btn=document.getElementById("spin"); if(btn) btn.disabled=true;
+
+  // اختر سؤال جديد ما طلع من قبل
+  const remaining=[];
+  for(let i=0;i<TOTAL;i++) if(!progress.used.includes(i)) remaining.push(i);
+  const idx = remaining[Math.floor(Math.random()*remaining.length)];
+
+  // شريحة بصرية عشوائية توقف تحت المؤشر
+  const visualSlice = Math.floor(Math.random()*SLICES_ON_WHEEL);
+  const sliceAng=360/SLICES_ON_WHEEL;
+  wheelRotation += 360*6 + (360 - (visualSlice*sliceAng + sliceAng/2)) - (wheelRotation % 360);
+  const wheelEl=document.getElementById("wheel");
+  wheelEl.style.transition="transform 5s cubic-bezier(.17,.67,.12,.99)";
+  wheelEl.style.transform=`rotate(${wheelRotation}deg)`;
+
+  setTimeout(async ()=>{
+    progress.used.push(idx);
+    progress.last_index=idx;
+    progress.last_spin=Date.now();
+    const err=await saveProgress();
+    const panel=document.getElementById("panel");
+    const pill=document.querySelector(".count-pill");
+    if(pill) pill.textContent=`${progress.used.length} من ${TOTAL} — باقي ${TOTAL - progress.used.length}`;
+    showResult(panel, idx);
+    if(err){ const e=el(`<div class="err">تنبيه: ما انحفظ التقدّم (${err})</div>`); panel.appendChild(e); }
+    spinning=false;
+  },5200);
+}
+
+// ===== إقلاع =====
+(function init(){
+  if(typeof supabase==="undefined"){
+    app.innerHTML=`<div class="err">تعذّر تحميل الاتصال. حدّث الصفحة.</div>`;
+    return;
+  }
+  screenRole();
+})();
+</script>
+</body>
+</html>
