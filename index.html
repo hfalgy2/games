@@ -280,6 +280,45 @@ buildCounters();
 setInterval(buildCounters, 60000); // تحديث كل دقيقة
 
 // ===== الجداول =====
+// ---- أدوات التشفير (Web Crypto) ----
+const enc = new TextEncoder();
+const dec = new TextDecoder();
+function buf2b64(buf){ return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function b642buf(b64){ return Uint8Array.from(atob(b64), c=>c.charCodeAt(0)); }
+
+// تجزئة الرقم السري (SHA-256 مع ملح) — لا يُخزَّن الرقم نفسه
+async function hashPin(pin, saltB64){
+  const salt = saltB64 ? b642buf(saltB64) : crypto.getRandomValues(new Uint8Array(16));
+  const material = enc.encode(pin);
+  const combined = new Uint8Array(salt.length + material.length);
+  combined.set(salt); combined.set(material, salt.length);
+  const digest = await crypto.subtle.digest("SHA-256", combined);
+  return { hash: buf2b64(digest), salt: buf2b64(salt) };
+}
+
+// اشتقاق مفتاح تشفير من الرقم السري (PBKDF2)
+async function deriveKey(pin, saltB64){
+  const salt = b642buf(saltB64);
+  const baseKey = await crypto.subtle.importKey("raw", enc.encode(pin), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name:"PBKDF2", salt, iterations:100000, hash:"SHA-256" },
+    baseKey, { name:"AES-GCM", length:256 }, false, ["encrypt","decrypt"]);
+}
+async function encryptObj(key, obj){
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, key, enc.encode(JSON.stringify(obj)));
+  return buf2b64(iv) + ":" + buf2b64(ct);
+}
+async function decryptObj(key, blob){
+  try{
+    const [ivB64, ctB64] = blob.split(":");
+    const pt = await crypto.subtle.decrypt({ name:"AES-GCM", iv:b642buf(ivB64) }, key, b642buf(ctB64));
+    return JSON.parse(dec.decode(pt));
+  }catch(e){ return null; }
+}
+
+let cryptoKey = { hadi:null, jori:null }; // مفتاح التشفير بعد الفتح
+
 const OWNERS = { hadi:{label:"جدول هادي", ar:"هادي"}, jori:{label:"جدول جوري", ar:"جوري"} };
 let currentOwner = "hadi";
 let unlocked = { hadi:false, jori:false };
@@ -291,23 +330,33 @@ const fmtSAR = n => (Math.round(n*100)/100).toLocaleString("en-US");
 
 async function wFetchLock(owner){
   if(!wdb) return null;
-  const { data } = await wdb.from("wedding_locks").select("pin").eq("owner", owner).maybeSingle();
-  return data ? data.pin : null;
+  const { data } = await wdb.from("wedding_locks").select("pin_hash, salt").eq("owner", owner).maybeSingle();
+  return data || null;
 }
-async function wSetLock(owner, pin){
-  await wdb.from("wedding_locks").upsert({ owner, pin }, { onConflict:"owner" });
+async function wSetLock(owner, pin_hash, salt){
+  await wdb.from("wedding_locks").upsert({ owner, pin_hash, salt }, { onConflict:"owner" });
 }
 async function wFetchItems(owner){
   if(!wdb) return [];
   const { data } = await wdb.from("wedding_items").select("*").eq("owner", owner).order("sort",{ascending:true}).order("id",{ascending:true});
-  return data || [];
+  if(!data) return [];
+  // فك التشفير بمفتاح المالك
+  const key = cryptoKey[owner];
+  const out = [];
+  for(const row of data){
+    const obj = await decryptObj(key, row.data);
+    if(obj) out.push({ id:row.id, ...obj });
+  }
+  return out;
 }
 async function wAddItem(owner, it){
-  const { data } = await wdb.from("wedding_items").insert({ owner, name:it.name, total:it.total, paid:it.paid, note:it.note, sort:Date.now()%100000 }).select().maybeSingle();
+  const blob = await encryptObj(cryptoKey[owner], { name:it.name, total:it.total, paid:it.paid, note:it.note });
+  const { data } = await wdb.from("wedding_items").insert({ owner, data:blob, sort:Date.now()%100000 }).select().maybeSingle();
   return data;
 }
-async function wUpdateItem(id, it){
-  await wdb.from("wedding_items").update({ name:it.name, total:it.total, paid:it.paid, note:it.note }).eq("id", id);
+async function wUpdateItem(owner, id, it){
+  const blob = await encryptObj(cryptoKey[owner], { name:it.name, total:it.total, paid:it.paid, note:it.note });
+  await wdb.from("wedding_items").update({ data:blob }).eq("id", id);
 }
 async function wDeleteItem(id){
   await wdb.from("wedding_items").delete().eq("id", id);
@@ -348,9 +397,9 @@ function renderLock(){
     kp.appendChild(btn);
   });
   // حدّث النص حسب وجود قفل مسبق
-  wFetchLock(currentOwner).then(pin=>{
+  wFetchLock(currentOwner).then(lock=>{
     const sub=document.getElementById("lockSub");
-    if(sub) sub.textContent = pin ? "أدخل رقمك السري لفتح الجدول" : "أنشئ رقماً سرياً جديداً (٤ أرقام) — احفظه!";
+    if(sub) sub.textContent = lock ? "أدخل رقمك السري لفتح الجدول" : "أنشئ رقماً سرياً جديداً (٤ أرقام) — احفظه!";
   });
 }
 function drawPins(){
@@ -376,19 +425,26 @@ async function submitPin(){
   const err=document.getElementById("lockErr");
   const existing = await wFetchLock(currentOwner);
   if(existing===null){
-    // أول مرة — أنشئ القفل
-    await wSetLock(currentOwner, entered);
-    unlocked[currentOwner]=true;
-    items[currentOwner]=await wFetchItems(currentOwner);
-    renderTable();
-  } else if(existing===entered){
+    // أول مرة — أنشئ القفل (تجزئة + ملح)
+    const { hash, salt } = await hashPin(entered);
+    await wSetLock(currentOwner, hash, salt);
+    cryptoKey[currentOwner] = await deriveKey(entered, salt);
     unlocked[currentOwner]=true;
     items[currentOwner]=await wFetchItems(currentOwner);
     renderTable();
   } else {
-    pinBuffer="";
-    drawPins();
-    if(err) err.textContent="الرقم السري غير صحيح";
+    // تحقّق: جزّئ المُدخل بنفس الملح وقارن
+    const { hash } = await hashPin(entered, existing.salt);
+    if(hash === existing.pin_hash){
+      cryptoKey[currentOwner] = await deriveKey(entered, existing.salt);
+      unlocked[currentOwner]=true;
+      items[currentOwner]=await wFetchItems(currentOwner);
+      renderTable();
+    } else {
+      pinBuffer="";
+      drawPins();
+      if(err) err.textContent="الرقم السري غير صحيح";
+    }
   }
 }
 
@@ -434,11 +490,12 @@ function renderTable(){
     });
   }
   html += `<button class="addbtn" id="addItem">+ أضف بند جديد</button>`;
-  html += `<div class="wtools"><button class="wtool" id="lockAgain">قفل الجدول 🔒</button></div>`;
+  html += `<div class="wtools"><button class="wtool" id="changePin">تغيير الرقم السري 🔑</button> · <button class="wtool" id="lockAgain">قفل الجدول 🔒</button></div>`;
   wbody.innerHTML = html;
 
   document.getElementById("addItem").onclick = ()=>openModal(null);
-  document.getElementById("lockAgain").onclick = ()=>{ unlocked[currentOwner]=false; renderLock(); };
+  document.getElementById("lockAgain").onclick = ()=>{ unlocked[currentOwner]=false; cryptoKey[currentOwner]=null; renderLock(); };
+  document.getElementById("changePin").onclick = ()=>openChangePin();
   wbody.querySelectorAll("[data-edit]").forEach(b=> b.onclick=()=>{
     const it = list.find(x=>String(x.id)===b.dataset.edit); openModal(it);
   });
@@ -478,11 +535,53 @@ function openModal(it){
     const note=bg.querySelector("#f_note").value.trim();
     if(!name){ bg.querySelector("#f_name").focus(); return; }
     const payload={name,total,paid,note};
-    if(editing) await wUpdateItem(it.id, payload);
+    if(editing) await wUpdateItem(currentOwner, it.id, payload);
     else await wAddItem(currentOwner, payload);
     items[currentOwner]=await wFetchItems(currentOwner);
     bg.remove();
     renderTable();
+  };
+}
+
+async function openChangePin(){
+  const owner = currentOwner;
+  const cur = items[owner]; // البنود الحالية (مفكوكة التشفير في الذاكرة)
+  const bg=document.createElement("div");
+  bg.className="modal-bg";
+  bg.innerHTML=`
+    <div class="modal">
+      <h3>تغيير الرقم السري</h3>
+      <div class="field"><label>الرقم السري الجديد (٤ أرقام)</label><input id="np1" type="tel" inputmode="numeric" maxlength="4" placeholder="****"></div>
+      <div class="field"><label>أعد إدخاله للتأكيد</label><input id="np2" type="tel" inputmode="numeric" maxlength="4" placeholder="****"></div>
+      <div class="lockerr" id="cpErr"></div>
+      <div class="modal-acts">
+        <button class="m-cancel" id="cp_cancel">إلغاء</button>
+        <button class="m-save" id="cp_save">حفظ</button>
+      </div>
+    </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#cp_cancel").onclick=()=>bg.remove();
+  bg.onclick=(e)=>{ if(e.target===bg) bg.remove(); };
+  bg.querySelector("#cp_save").onclick=async ()=>{
+    const p1=bg.querySelector("#np1").value.trim(), p2=bg.querySelector("#np2").value.trim();
+    const er=bg.querySelector("#cpErr");
+    if(!/^\d{4}$/.test(p1)){ er.textContent="لازم ٤ أرقام"; return; }
+    if(p1!==p2){ er.textContent="الرقمان غير متطابقين"; return; }
+    er.textContent="جاري التحديث...";
+    // مفتاح وملح جديد
+    const { hash, salt } = await hashPin(p1);
+    const newKey = await deriveKey(p1, salt);
+    // أعد تشفير كل البنود بالمفتاح الجديد
+    const { data:rows } = await wdb.from("wedding_items").select("id").eq("owner", owner);
+    for(let i=0;i<cur.length;i++){
+      const it=cur[i];
+      const blob = await encryptObj(newKey, { name:it.name, total:it.total, paid:it.paid, note:it.note });
+      await wdb.from("wedding_items").update({ data:blob }).eq("id", it.id);
+    }
+    await wSetLock(owner, hash, salt);
+    cryptoKey[owner]=newKey;
+    bg.remove();
+    alert("تم تغيير الرقم السري ✓");
   };
 }
 
