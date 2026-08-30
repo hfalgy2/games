@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>هادي و جوري</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --purple:#7c4dff; --purple-deep:#5e35d6;
@@ -23,7 +22,7 @@
       radial-gradient(circle at 88% 12%, rgba(255,194,75,0.22), transparent 42%),
       radial-gradient(circle at 50% 108%, rgba(124,77,255,0.24), transparent 55%),
       var(--lav-bg);
-    color:var(--ink); font-family:'Tajawal',sans-serif;
+    color:var(--ink); font-family:'Readex Pro', sans-serif;
     padding:0 18px; overflow-x:hidden;
     display:flex; flex-direction:column; align-items:center;
   }
@@ -33,46 +32,176 @@
   .blob.b3{ width:46px; height:46px; background:var(--purple); bottom:8%; left:14%; opacity:.35; animation:float1 8s ease-in-out infinite; }
   @keyframes float1{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
   @keyframes float2{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(16px)} }
-  .wrap{ width:100%; max-width:480px; position:relative; z-index:1; padding:52px 0 60px; }
-  .hero{ text-align:center; margin-bottom:40px; animation:pop .55s cubic-bezier(.34,1.56,.64,1) both; }
-  .names{ font-family:'Amiri',serif; font-weight:700; font-size:52px; line-height:1.1; color:var(--purple-deep); display:inline-block; }
-  .names .amp{ display:block; font-size:26px; color:var(--coral); margin:2px 0; font-style:italic; }
-  .tag{ margin-top:16px; font-size:15px; color:var(--ink-soft); font-weight:500; background:var(--paper); display:inline-block; padding:8px 18px; border-radius:40px; box-shadow:0 6px 18px rgba(124,77,255,.14); }
-  .grid-label{ display:flex; align-items:center; gap:12px; margin:0 4px 18px; color:var(--ink-soft); font-family:'Amiri',serif; font-weight:700; font-size:16px; }
-  .grid-label::after{ content:""; flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg, var(--purple), transparent); }
+  .wrap{ width:100%; max-width:480px; position:relative; z-index:1; padding:44px 0 60px; }
+
+  .hero{ text-align:center; margin-bottom:24px; animation:pop .55s cubic-bezier(.34,1.56,.64,1) both; }
+  .names{ font-weight:700; font-size:46px; line-height:1.1; color:var(--purple-deep); display:inline-block; }
+  .names .amp{ display:block; font-size:24px; color:var(--coral); margin:2px 0; }
+
+  /* التبويبات */
+  .tabbar{ display:flex; gap:8px; justify-content:center; margin-bottom:28px; }
+  .tab{ font-family:'Readex Pro',sans-serif; font-weight:600; font-size:15px; color:var(--ink-soft);
+    background:var(--paper); border:1.5px solid rgba(124,77,255,.2); border-radius:30px;
+    padding:11px 30px; cursor:pointer; box-shadow:0 4px 12px rgba(124,77,255,.1); transition:all .2s ease; }
+  .tab.active{ background:linear-gradient(135deg,var(--coral),var(--purple)); color:#fff; border-color:transparent; box-shadow:0 8px 20px rgba(255,111,145,.3); }
+
+  .panel{ display:none; animation:fade .4s ease both; }
+  .panel.show{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  /* شبكة الألعاب */
   .tiles{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .tile{ position:relative; aspect-ratio:1/1; border-radius:26px; text-decoration:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; color:#fff; overflow:hidden; isolation:isolate; box-shadow:0 14px 30px rgba(124,77,255,.22); transition:transform .2s cubic-bezier(.34,1.56,.64,1); animation:pop .5s cubic-bezier(.34,1.56,.64,1) both; }
   .tile:active{ transform:scale(.95); }
-  .tile:nth-child(1){ animation-delay:.1s; background:linear-gradient(150deg, var(--coral), var(--purple)); }
-  .tile:nth-child(2){ animation-delay:.18s; background:linear-gradient(150deg, var(--sunny), var(--coral)); }
-  .tile:nth-child(3){ animation-delay:.26s; background:linear-gradient(150deg, var(--mint), var(--purple)); }
-  .tile:nth-child(4){ animation-delay:.34s; background:linear-gradient(150deg, var(--purple), var(--coral)); }
-  .tile .num{ font-family:'Amiri',serif; font-weight:700; font-size:64px; line-height:1; text-shadow:0 4px 14px rgba(0,0,0,.15); }
+  .tile:nth-child(1){ animation-delay:.05s; background:linear-gradient(150deg, var(--coral), var(--purple)); }
+  .tile:nth-child(2){ animation-delay:.12s; background:linear-gradient(150deg, var(--sunny), var(--coral)); }
+  .tile:nth-child(3){ animation-delay:.19s; background:linear-gradient(150deg, var(--mint), var(--purple)); }
+  .tile:nth-child(4){ animation-delay:.26s; background:linear-gradient(150deg, var(--purple), var(--coral)); }
+  .tile .num{ font-weight:700; font-size:64px; line-height:1; text-shadow:0 4px 14px rgba(0,0,0,.15); }
   .tile .glyph{ position:absolute; font-size:120px; opacity:.14; bottom:-24px; left:-10px; transform:rotate(-12deg); }
-  .tile .go{ font-size:13px; font-weight:700; background:rgba(255,255,255,.25); padding:6px 16px; border-radius:30px; backdrop-filter:blur(4px); }
+  .tile .go{ font-size:13px; font-weight:600; background:rgba(255,255,255,.25); padding:6px 16px; border-radius:30px; backdrop-filter:blur(4px); }
   .tile.add{ background:var(--paper); color:var(--ink-soft); border:2px dashed rgba(124,77,255,.3); box-shadow:none; }
   .tile.add .plus{ font-size:44px; line-height:1; color:var(--purple); }
   .tile.add .lbl{ font-size:13px; font-weight:500; }
-  .foot{ text-align:center; margin-top:34px; font-family:'Amiri',serif; font-style:italic; color:var(--ink-soft); font-size:14px; opacity:.9; }
+
+  /* الألبوم — عدّاد حي */
+  .album-intro{ text-align:center; color:var(--ink-soft); font-size:14px; margin-bottom:24px; line-height:1.7; }
+  .cnode{ background:var(--paper); border-radius:20px; padding:20px 22px; margin-bottom:16px; position:relative; overflow:hidden;
+    box-shadow:0 10px 26px rgba(124,77,255,.14); border:1px solid rgba(124,77,255,.1);
+    animation:pop .55s cubic-bezier(.34,1.56,.64,1) both; }
+  .cnode::before{ content:""; position:absolute; top:0; right:0; bottom:0; width:6px; }
+  .c1::before{ background:linear-gradient(var(--coral),var(--coral-soft)); }
+  .c2::before{ background:linear-gradient(var(--sunny),var(--sunny-light)); }
+  .c3::before{ background:linear-gradient(var(--mint),#7effe0); }
+  .c4::before{ background:linear-gradient(var(--purple),#c9b3ff); }
+  .cnode:nth-child(1){animation-delay:.05s;} .cnode:nth-child(2){animation-delay:.13s;}
+  .cnode:nth-child(3){animation-delay:.21s;} .cnode:nth-child(4){animation-delay:.29s;}
+  .crow{ display:flex; align-items:center; gap:14px; }
+  .cemoji{ flex-shrink:0; width:54px; height:54px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; }
+  .c1 .cemoji{ background:rgba(255,111,145,.14); } .c2 .cemoji{ background:rgba(255,194,75,.16); }
+  .c3 .cemoji{ background:rgba(62,199,176,.16); } .c4 .cemoji{ background:rgba(124,77,255,.14); }
+  .cinfo{ flex:1; }
+  .cname{ font-size:18px; font-weight:700; color:var(--ink); }
+  .cdate{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; direction:ltr; text-align:right; }
+  .cbig{ margin-top:14px; text-align:center; }
+  .cnum{ font-size:34px; font-weight:700; color:var(--purple-deep); line-height:1; direction:ltr; }
+  .c1 .cnum{ color:var(--coral); } .c2 .cnum{ color:#d99b1e; } .c3 .cnum{ color:var(--mint); } .c4 .cnum{ color:var(--purple); }
+  .cunit{ font-size:12px; color:var(--ink-soft); margin-top:5px; }
+  .cnote{ font-size:12.5px; color:var(--coral); font-weight:500; margin-top:8px; text-align:center; }
+
+  .foot{ text-align:center; margin-top:20px; color:var(--ink-soft); font-size:13.5px; opacity:.9; }
   .foot .heart{ color:var(--coral); }
   @keyframes pop{ from{opacity:0; transform:translateY(16px) scale(.96);} to{opacity:1; transform:translateY(0) scale(1);} }
-  @media (max-width:360px){ .names{ font-size:44px; } .tile .num{ font-size:52px; } }
+  @media (max-width:360px){ .names{ font-size:40px; } .tile .num{ font-size:52px; } }
+  /* الجداول — التبويبات الفرعية */
+  .subtabbar{ display:flex; gap:8px; justify-content:center; margin-bottom:22px; }
+  .subtab{ font-family:'Readex Pro',sans-serif; font-weight:600; font-size:14px; color:var(--ink-soft); background:transparent; border:1.5px solid rgba(124,77,255,.25); border-radius:26px; padding:9px 22px; cursor:pointer; }
+  .subtab.active{ background:var(--purple); color:#fff; border-color:transparent; }
+
+  /* شاشة القفل */
+  .lock{ background:var(--paper); border-radius:22px; padding:34px 24px; text-align:center; box-shadow:0 14px 34px rgba(124,77,255,.18); max-width:360px; margin:10px auto; }
+  .lock .ic{ font-size:40px; margin-bottom:10px; }
+  .lock .lt{ font-size:19px; font-weight:700; margin-bottom:6px; }
+  .lock .ls{ font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.6; }
+  .pin{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; direction:ltr; }
+  .pin .dot{ width:50px; height:58px; border-radius:14px; border:2px solid rgba(124,77,255,.3); display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:var(--purple-deep); background:rgba(124,77,255,.04); }
+  .pin .dot.filled{ border-color:var(--purple); background:rgba(124,77,255,.1); }
+  .lockerr{ color:var(--coral); font-size:13px; min-height:18px; margin:6px 0 10px; }
+  .keypad{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:280px; margin:0 auto; }
+  .key{ background:rgba(124,77,255,.06); border:1.5px solid rgba(124,77,255,.15); border-radius:14px; font-family:'Readex Pro'; font-size:22px; font-weight:700; color:var(--purple-deep); padding:14px 0; cursor:pointer; }
+  .key:active{ background:rgba(124,77,255,.16); }
+  .key.wide{ grid-column:span 1; font-size:16px; color:var(--coral); }
+
+  /* ملخص */
+  .summary{ display:flex; gap:10px; margin-bottom:18px; }
+  .sum{ flex:1; background:var(--paper); border-radius:16px; padding:14px 8px; text-align:center; box-shadow:0 6px 16px rgba(124,77,255,.1); }
+  .sum .v{ font-size:19px; font-weight:700; direction:ltr; }
+  .sum.total .v{ color:var(--ink); } .sum.paid .v{ color:var(--mint); } .sum.left .v{ color:var(--coral); }
+  .sum .l{ font-size:11px; color:var(--ink-soft); margin-top:3px; }
+
+  /* بطاقة بند */
+  .item{ background:var(--paper); border-radius:16px; padding:15px 18px; margin-bottom:12px; box-shadow:0 6px 16px rgba(124,77,255,.1); position:relative; overflow:hidden; }
+  .item::before{ content:""; position:absolute; top:0; right:0; bottom:0; width:5px; }
+  .st-full::before{ background:var(--mint); } .st-partial::before{ background:var(--sunny); } .st-none::before{ background:var(--coral); }
+  .item-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:10px; }
+  .item-name{ font-size:16px; font-weight:700; flex:1; }
+  .ibadge{ font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; color:#fff; white-space:nowrap; }
+  .b-full{ background:var(--mint); } .b-partial{ background:var(--sunny); } .b-none{ background:var(--coral); }
+  .bars{ display:flex; flex-wrap:wrap; gap:12px; font-size:12.5px; color:var(--ink-soft); }
+  .bars b{ color:var(--ink); direction:ltr; }
+  .prog{ height:6px; background:rgba(124,77,255,.1); border-radius:6px; margin-top:9px; overflow:hidden; }
+  .prog span{ display:block; height:100%; border-radius:6px; }
+  .st-full .prog span{ background:var(--mint); } .st-partial .prog span{ background:var(--sunny); } .st-none .prog span{ background:var(--coral); }
+  .inote{ font-size:12.5px; color:var(--ink-soft); margin-top:9px; padding-top:9px; border-top:1px dashed rgba(124,77,255,.15); line-height:1.6; }
+  .iacts{ display:flex; gap:8px; margin-top:10px; }
+  .iact{ font-family:'Readex Pro'; font-size:12px; font-weight:600; border:1px solid rgba(124,77,255,.25); background:transparent; color:var(--ink-soft); border-radius:10px; padding:6px 14px; cursor:pointer; }
+  .iact.del{ color:var(--coral); border-color:rgba(255,111,145,.35); }
+
+  .addbtn{ width:100%; background:linear-gradient(135deg,var(--coral),var(--purple)); color:#fff; border:none; border-radius:14px; font-family:'Readex Pro'; font-weight:700; font-size:15px; padding:15px; margin-top:6px; cursor:pointer; box-shadow:0 8px 20px rgba(255,111,145,.3); }
+  .wempty{ text-align:center; color:var(--ink-soft); font-size:14px; padding:20px 0; }
+  .wtools{ text-align:center; margin-top:14px; }
+  .wtool{ font-family:'Readex Pro'; font-size:12px; color:var(--ink-soft); background:none; border:none; cursor:pointer; text-decoration:underline; opacity:.7; }
+
+  /* نموذج إضافة/تعديل */
+  .modal-bg{ position:fixed; inset:0; background:rgba(58,42,92,.4); backdrop-filter:blur(3px); z-index:50; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .modal{ background:var(--paper); border-radius:22px; padding:24px 22px; width:100%; max-width:380px; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+  .modal h3{ font-size:19px; font-weight:700; margin-bottom:16px; text-align:center; color:var(--purple-deep); }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:13px; color:var(--ink-soft); margin-bottom:6px; font-weight:500; }
+  .field input, .field textarea{ width:100%; border:1.5px solid rgba(124,77,255,.25); border-radius:12px; padding:12px 14px; font-family:'Readex Pro'; font-size:15px; color:var(--ink); background:rgba(124,77,255,.03); }
+  .field textarea{ resize:vertical; min-height:60px; }
+  .modal-acts{ display:flex; gap:10px; margin-top:6px; }
+  .modal-acts button{ flex:1; border:none; border-radius:12px; font-family:'Readex Pro'; font-weight:700; font-size:15px; padding:13px; cursor:pointer; }
+  .m-save{ background:linear-gradient(135deg,var(--coral),var(--purple)); color:#fff; }
+  .m-cancel{ background:rgba(124,77,255,.08); color:var(--ink-soft); }
+
 </style>
 </head>
 <body>
   <div class="blob b1"></div>
   <div class="blob b2"></div>
   <div class="blob b3"></div>
+
   <div class="wrap">
     <div class="hero">
       <div class="names">هادي<span class="amp">&amp;</span>جوري</div>
-      <div class="tag">مساحتنا الخاصة ✦ نلعب ونتعرّف أكثر</div>
     </div>
-    <div class="grid-label">اختر</div>
-    <div class="tiles" id="tiles"></div>
+
+    <div class="tabbar">
+      <button class="tab active" data-tab="games">الألعاب</button>
+      <button class="tab" data-tab="album">ألبومنا</button>
+      <button class="tab" data-tab="wedding">جداولنا</button>
+    </div>
+
+    <!-- تبويب الألعاب -->
+    <div class="panel show" id="games">
+      <div class="tiles" id="tiles"></div>
+    </div>
+
+    <!-- تبويب الألبوم -->
+    <div class="panel" id="album">
+      <p class="album-intro">رحلتنا تكبر كل لحظة ♥</p>
+      <div id="counters"></div>
+    </div>
+
+    <!-- تبويب الجداول -->
+    <div class="panel" id="wedding">
+      <div class="subtabbar">
+        <button class="subtab active" data-owner="hadi">جدول هادي</button>
+        <button class="subtab" data-owner="jori">جدول جوري</button>
+      </div>
+      <div id="wedding-body"></div>
+    </div>
+
     <div class="foot">صُنعت لنا نحن <span class="heart">♥</span></div>
   </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = "https://ajwpuafvxkprvyoxqysu.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqd3B1YWZ2eGtwcnZ5b3hxeXN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1OTYyNzAsImV4cCI6MjEwMDE3MjI3MH0.lzdyrIJnQhO7dFhcm00yVB-eLW8FFhZM46EepyFcv-o";
+const wdb = (typeof supabase!=="undefined") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
 const GAMES = [
   { file:"game1.html",   num:"١", glyph:"♥" },
   { file:"index_1.html", num:"٢", glyph:"✦" },
@@ -92,6 +221,290 @@ if(GAMES.length % 2 === 1){
   add.innerHTML = `<span class="plus">+</span><span class="lbl">قريباً</span>`;
   wrap.appendChild(add);
 }
+
+// ===== العدّاد الحي للألبوم =====
+// عدّل التواريخ هنا (سنة, شهر, يوم). ملاحظة: الشهر يبدأ من 0 (يناير=0).
+const MILESTONES = [
+  { emoji:"💍", name:"الخطوبة", date:new Date(2026,0,1),  note:"حيث بدأت الحكاية", cls:"c1", future:false },
+  { emoji:"📜", name:"الملكة",  date:new Date(2026,4,29), note:"صرنا واحد",        cls:"c2", future:false },
+  { emoji:"🎉", name:"الزواج",  date:null,                note:"ليلة العمر — قريباً", cls:"c3", future:true  },
+  { emoji:"✨", name:"الفصل الأجمل... بعد", date:null,     note:"يُكتب بإذن الله",   cls:"c4", future:true  }
+];
+
+function diffParts(from, to){
+  let ms = Math.abs(to - from);
+  const day = 86400000;
+  const days = Math.floor(ms/day);
+  const years = Math.floor(days/365);
+  const remDays = days - years*365;
+  const months = Math.floor(remDays/30);
+  const d = remDays - months*30;
+  return { years, months, days:d, totalDays:days };
+}
+
+function buildCounters(){
+  const box = document.getElementById("counters");
+  box.innerHTML = "";
+  const now = new Date();
+  MILESTONES.forEach(m=>{
+    let bigHtml, dateHtml;
+    if(m.future || !m.date){
+      dateHtml = "— — —";
+      bigHtml = `<div class="cnum" style="font-size:22px;">بانتظاره ✨</div>`;
+    } else {
+      const p = diffParts(m.date, now);
+      dateHtml = `${m.date.getDate()}-${m.date.getMonth()+1}-${m.date.getFullYear()}`;
+      let parts = [];
+      if(p.years) parts.push(`${p.years} سنة`);
+      if(p.months) parts.push(`${p.months} شهر`);
+      parts.push(`${p.days} يوم`);
+      bigHtml = `<div class="cnum">${p.totalDays}</div><div class="cunit">يوم مضى · ${parts.join(" و ")}</div>`;
+    }
+    const node = document.createElement("div");
+    node.className = "cnode " + m.cls;
+    node.innerHTML = `
+      <div class="crow">
+        <div class="cemoji">${m.emoji}</div>
+        <div class="cinfo">
+          <div class="cname">${m.name}</div>
+          <div class="cdate">${dateHtml}</div>
+        </div>
+      </div>
+      <div class="cbig">${bigHtml}</div>
+      <div class="cnote">${m.note}</div>`;
+    box.appendChild(node);
+  });
+}
+buildCounters();
+setInterval(buildCounters, 60000); // تحديث كل دقيقة
+
+// ===== الجداول =====
+const OWNERS = { hadi:{label:"جدول هادي", ar:"هادي"}, jori:{label:"جدول جوري", ar:"جوري"} };
+let currentOwner = "hadi";
+let unlocked = { hadi:false, jori:false };
+let items = { hadi:[], jori:[] };
+let pinBuffer = "";
+
+const wbody = document.getElementById("wedding-body");
+const fmtSAR = n => (Math.round(n*100)/100).toLocaleString("en-US");
+
+async function wFetchLock(owner){
+  if(!wdb) return null;
+  const { data } = await wdb.from("wedding_locks").select("pin").eq("owner", owner).maybeSingle();
+  return data ? data.pin : null;
+}
+async function wSetLock(owner, pin){
+  await wdb.from("wedding_locks").upsert({ owner, pin }, { onConflict:"owner" });
+}
+async function wFetchItems(owner){
+  if(!wdb) return [];
+  const { data } = await wdb.from("wedding_items").select("*").eq("owner", owner).order("sort",{ascending:true}).order("id",{ascending:true});
+  return data || [];
+}
+async function wAddItem(owner, it){
+  const { data } = await wdb.from("wedding_items").insert({ owner, name:it.name, total:it.total, paid:it.paid, note:it.note, sort:Date.now()%100000 }).select().maybeSingle();
+  return data;
+}
+async function wUpdateItem(id, it){
+  await wdb.from("wedding_items").update({ name:it.name, total:it.total, paid:it.paid, note:it.note }).eq("id", id);
+}
+async function wDeleteItem(id){
+  await wdb.from("wedding_items").delete().eq("id", id);
+}
+
+function statusOf(it){
+  const t=Number(it.total)||0, p=Number(it.paid)||0;
+  if(p<=0) return {cls:"st-none", badge:"b-none", label:"ما دُفع"};
+  if(p>=t) return {cls:"st-full", badge:"b-full", label:"مدفوع كامل"};
+  return {cls:"st-partial", badge:"b-partial", label:"عربون"};
+}
+
+function renderWedding(){
+  if(!wdb){ wbody.innerHTML = `<div class="wempty">تعذّر الاتصال بقاعدة البيانات. حدّث الصفحة.</div>`; return; }
+  if(!unlocked[currentOwner]){ renderLock(); return; }
+  renderTable();
+}
+
+function renderLock(){
+  pinBuffer = "";
+  const o = OWNERS[currentOwner];
+  wbody.innerHTML = `
+    <div class="lock">
+      <div class="ic">🔒</div>
+      <div class="lt">${o.label}</div>
+      <div class="ls" id="lockSub">أدخل الرقم السري (٤ أرقام)</div>
+      <div class="pin" id="pinRow"></div>
+      <div class="lockerr" id="lockErr"></div>
+      <div class="keypad" id="keypad"></div>
+    </div>`;
+  drawPins();
+  const kp = document.getElementById("keypad");
+  ["1","2","3","4","5","6","7","8","9","مسح","0","⌫"].forEach(k=>{
+    const btn=document.createElement("button");
+    btn.className = "key" + (k==="مسح"||k==="⌫"?" wide":"");
+    btn.textContent = k;
+    btn.onclick = ()=>handleKey(k);
+    kp.appendChild(btn);
+  });
+  // حدّث النص حسب وجود قفل مسبق
+  wFetchLock(currentOwner).then(pin=>{
+    const sub=document.getElementById("lockSub");
+    if(sub) sub.textContent = pin ? "أدخل رقمك السري لفتح الجدول" : "أنشئ رقماً سرياً جديداً (٤ أرقام) — احفظه!";
+  });
+}
+function drawPins(){
+  const row=document.getElementById("pinRow"); if(!row) return;
+  row.innerHTML="";
+  for(let i=0;i<4;i++){
+    const d=document.createElement("div");
+    d.className="dot"+(i<pinBuffer.length?" filled":"");
+    d.textContent = i<pinBuffer.length ? "•" : "";
+    row.appendChild(d);
+  }
+}
+function handleKey(k){
+  const err=document.getElementById("lockErr"); if(err) err.textContent="";
+  if(k==="⌫"){ pinBuffer=pinBuffer.slice(0,-1); drawPins(); return; }
+  if(k==="مسح"){ pinBuffer=""; drawPins(); return; }
+  if(pinBuffer.length>=4) return;
+  pinBuffer+=k; drawPins();
+  if(pinBuffer.length===4) setTimeout(submitPin, 150);
+}
+async function submitPin(){
+  const entered = pinBuffer;
+  const err=document.getElementById("lockErr");
+  const existing = await wFetchLock(currentOwner);
+  if(existing===null){
+    // أول مرة — أنشئ القفل
+    await wSetLock(currentOwner, entered);
+    unlocked[currentOwner]=true;
+    items[currentOwner]=await wFetchItems(currentOwner);
+    renderTable();
+  } else if(existing===entered){
+    unlocked[currentOwner]=true;
+    items[currentOwner]=await wFetchItems(currentOwner);
+    renderTable();
+  } else {
+    pinBuffer="";
+    drawPins();
+    if(err) err.textContent="الرقم السري غير صحيح";
+  }
+}
+
+function renderTable(){
+  const list = items[currentOwner];
+  let total=0, paid=0;
+  list.forEach(it=>{ total+=Number(it.total)||0; paid+=Number(it.paid)||0; });
+  const left = total - paid;
+
+  let html = `
+    <div class="summary">
+      <div class="sum total"><div class="v">${fmtSAR(total)}</div><div class="l">الإجمالي (ر.س)</div></div>
+      <div class="sum paid"><div class="v">${fmtSAR(paid)}</div><div class="l">المدفوع</div></div>
+      <div class="sum left"><div class="v">${fmtSAR(left)}</div><div class="l">المتبقّي</div></div>
+    </div>`;
+
+  if(list.length===0){
+    html += `<div class="wempty">ما فيه بنود بعد — أضف أول بند 👇</div>`;
+  } else {
+    list.forEach(it=>{
+      const st=statusOf(it);
+      const t=Number(it.total)||0, p=Number(it.paid)||0;
+      const pct = t>0 ? Math.min(100, Math.round(p/t*100)) : 0;
+      const rem = t-p;
+      html += `
+        <div class="item ${st.cls}">
+          <div class="item-top">
+            <div class="item-name">${escapeHtml(it.name)}</div>
+            <span class="ibadge ${st.badge}">${st.label}</span>
+          </div>
+          <div class="bars">
+            <span>الكامل: <b>${fmtSAR(t)}</b></span>
+            <span>المدفوع: <b>${fmtSAR(p)}</b></span>
+            ${rem>0?`<span>باقي: <b>${fmtSAR(rem)}</b></span>`:``}
+          </div>
+          <div class="prog"><span style="width:${pct}%"></span></div>
+          ${it.note?`<div class="inote">📝 ${escapeHtml(it.note)}</div>`:``}
+          <div class="iacts">
+            <button class="iact" data-edit="${it.id}">تعديل</button>
+            <button class="iact del" data-del="${it.id}">حذف</button>
+          </div>
+        </div>`;
+    });
+  }
+  html += `<button class="addbtn" id="addItem">+ أضف بند جديد</button>`;
+  html += `<div class="wtools"><button class="wtool" id="lockAgain">قفل الجدول 🔒</button></div>`;
+  wbody.innerHTML = html;
+
+  document.getElementById("addItem").onclick = ()=>openModal(null);
+  document.getElementById("lockAgain").onclick = ()=>{ unlocked[currentOwner]=false; renderLock(); };
+  wbody.querySelectorAll("[data-edit]").forEach(b=> b.onclick=()=>{
+    const it = list.find(x=>String(x.id)===b.dataset.edit); openModal(it);
+  });
+  wbody.querySelectorAll("[data-del]").forEach(b=> b.onclick=async ()=>{
+    if(!confirm("متأكد تبي تحذف هذا البند؟")) return;
+    await wDeleteItem(b.dataset.del);
+    items[currentOwner]=await wFetchItems(currentOwner);
+    renderTable();
+  });
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+
+function openModal(it){
+  const editing = !!it;
+  const bg=document.createElement("div");
+  bg.className="modal-bg";
+  bg.innerHTML=`
+    <div class="modal">
+      <h3>${editing?"تعديل البند":"بند جديد"}</h3>
+      <div class="field"><label>اسم البند</label><input id="f_name" value="${editing?escapeHtml(it.name):""}" placeholder="مثال: القاعة"></div>
+      <div class="field"><label>المبلغ الكامل (ر.س)</label><input id="f_total" type="number" inputmode="decimal" value="${editing?it.total:""}" placeholder="0"></div>
+      <div class="field"><label>المدفوع (ر.س)</label><input id="f_paid" type="number" inputmode="decimal" value="${editing?it.paid:""}" placeholder="0"></div>
+      <div class="field"><label>ملاحظة (اختياري)</label><textarea id="f_note" placeholder="اسم المورد، رقم تواصل، أي تفصيل...">${editing?escapeHtml(it.note||""):""}</textarea></div>
+      <div class="modal-acts">
+        <button class="m-cancel" id="m_cancel">إلغاء</button>
+        <button class="m-save" id="m_save">${editing?"حفظ":"إضافة"}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#m_cancel").onclick=()=>bg.remove();
+  bg.onclick=(e)=>{ if(e.target===bg) bg.remove(); };
+  bg.querySelector("#m_save").onclick=async ()=>{
+    const name=bg.querySelector("#f_name").value.trim();
+    const total=parseFloat(bg.querySelector("#f_total").value)||0;
+    const paid=parseFloat(bg.querySelector("#f_paid").value)||0;
+    const note=bg.querySelector("#f_note").value.trim();
+    if(!name){ bg.querySelector("#f_name").focus(); return; }
+    const payload={name,total,paid,note};
+    if(editing) await wUpdateItem(it.id, payload);
+    else await wAddItem(currentOwner, payload);
+    items[currentOwner]=await wFetchItems(currentOwner);
+    bg.remove();
+    renderTable();
+  };
+}
+
+// التبويبات الفرعية للجداول
+document.querySelectorAll(".subtab").forEach(st=>{
+  st.onclick=()=>{
+    document.querySelectorAll(".subtab").forEach(x=>x.classList.remove("active"));
+    st.classList.add("active");
+    currentOwner=st.dataset.owner;
+    renderWedding();
+  };
+});
+
+// تبديل التبويبات
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(x=>x.classList.remove("show"));
+    t.classList.add("active");
+    document.getElementById(t.dataset.tab).classList.add("show");
+    if(t.dataset.tab==="wedding") renderWedding();
+  };
+});
 </script>
 </body>
 </html>
