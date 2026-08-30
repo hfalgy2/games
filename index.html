@@ -112,6 +112,11 @@
   .key:active{ background:rgba(124,77,255,.16); }
   .key.wide{ grid-column:span 1; font-size:16px; color:var(--coral); }
 
+  /* شريط الفلتر */
+  .filterbar{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; justify-content:center; }
+  .fbtn{ font-family:'Readex Pro',sans-serif; font-size:12.5px; font-weight:600; color:var(--ink-soft); background:var(--paper); border:1.5px solid rgba(124,77,255,.2); border-radius:22px; padding:8px 14px; cursor:pointer; }
+  .fbtn.active{ background:var(--purple); color:#fff; border-color:transparent; }
+
   /* ملخص */
   .summary{ display:flex; gap:10px; margin-bottom:18px; }
   .sum{ flex:1; background:var(--paper); border-radius:16px; padding:14px 8px; text-align:center; box-shadow:0 6px 16px rgba(124,77,255,.1); }
@@ -318,6 +323,7 @@ async function decryptObj(key, blob){
 }
 
 let cryptoKey = { hadi:null, jori:null }; // مفتاح التشفير بعد الفتح
+let wFilter = "all"; // فلتر الحالة: all / full / partial / none
 
 const OWNERS = { hadi:{label:"جدول هادي", ar:"هادي"}, jori:{label:"جدول جوري", ar:"جوري"} };
 let currentOwner = "hadi";
@@ -461,10 +467,35 @@ function renderTable(){
       <div class="sum left"><div class="v">${fmtSAR(left)}</div><div class="l">المتبقّي</div></div>
     </div>`;
 
+  // شريط الفلتر — العدّ لكل حالة
+  const cnt = { all:list.length, full:0, partial:0, none:0 };
+  list.forEach(it=>{
+    const s=statusOf(it);
+    if(s.cls==="st-full") cnt.full++;
+    else if(s.cls==="st-partial") cnt.partial++;
+    else cnt.none++;
+  });
+  html += `
+    <div class="filterbar">
+      <button class="fbtn ${wFilter==='all'?'active':''}" data-f="all">الكل (${cnt.all})</button>
+      <button class="fbtn ${wFilter==='partial'?'active':''}" data-f="partial">عربون (${cnt.partial})</button>
+      <button class="fbtn ${wFilter==='none'?'active':''}" data-f="none">ما دُفع (${cnt.none})</button>
+      <button class="fbtn ${wFilter==='full'?'active':''}" data-f="full">مدفوع كامل (${cnt.full})</button>
+    </div>`;
+
+  // طبّق الفلتر على القائمة المعروضة (الملخص فوق يظل يحسب الكل)
+  const shown = list.filter(it=>{
+    if(wFilter==="all") return true;
+    const s=statusOf(it);
+    return (wFilter==="full"&&s.cls==="st-full") || (wFilter==="partial"&&s.cls==="st-partial") || (wFilter==="none"&&s.cls==="st-none");
+  });
+
   if(list.length===0){
     html += `<div class="wempty">ما فيه بنود بعد — أضف أول بند 👇</div>`;
+  } else if(shown.length===0){
+    html += `<div class="wempty">ما فيه بنود بهذي الحالة</div>`;
   } else {
-    list.forEach(it=>{
+    shown.forEach(it=>{
       const st=statusOf(it);
       const t=Number(it.total)||0, p=Number(it.paid)||0;
       const pct = t>0 ? Math.min(100, Math.round(p/t*100)) : 0;
@@ -494,8 +525,12 @@ function renderTable(){
   wbody.innerHTML = html;
 
   document.getElementById("addItem").onclick = ()=>openModal(null);
-  document.getElementById("lockAgain").onclick = ()=>{ unlocked[currentOwner]=false; cryptoKey[currentOwner]=null; renderLock(); };
+  document.getElementById("lockAgain").onclick = ()=>{ unlocked[currentOwner]=false; cryptoKey[currentOwner]=null; wFilter="all"; renderLock(); };
   document.getElementById("changePin").onclick = ()=>openChangePin();
+  wbody.querySelectorAll("[data-f]").forEach(b=> b.onclick=()=>{
+    wFilter = b.dataset.f;
+    renderTable();
+  });
   wbody.querySelectorAll("[data-edit]").forEach(b=> b.onclick=()=>{
     const it = list.find(x=>String(x.id)===b.dataset.edit); openModal(it);
   });
@@ -590,7 +625,7 @@ document.querySelectorAll(".subtab").forEach(st=>{
   st.onclick=()=>{
     document.querySelectorAll(".subtab").forEach(x=>x.classList.remove("active"));
     st.classList.add("active");
-    currentOwner=st.dataset.owner;
+    currentOwner=st.dataset.owner; wFilter="all";
     renderWedding();
   };
 });
