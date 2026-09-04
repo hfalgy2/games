@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 360" role="img" aria-labelledby="title desc">
+  <title id="title">شعار هادي وجوري</title>
+  <desc id="desc">حرفان عربيان متداخلان بأسلوب شريطي مجرد</desc>
+  <defs>
+    <linearGradient id="ribbon" x1="60" y1="40" x2="255" y2="318" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7657ff"/>
+      <stop offset=".48" stop-color="#a85cf0"/>
+      <stop offset="1" stop-color="#ff4f91"/>
+    </linearGradient>
+    <linearGradient id="ivory" x1="52" y1="86" x2="266" y2="205" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fffdf7"/>
+      <stop offset="1" stop-color="#f6e8d8"/>
+    </linearGradient>
+  </defs>
+  <path d="M157 34c-35 31-48 68-34 104 13 33 45 48 75 69 33 23 45 51 30 77-15 25-48 35-83 23" fill="none" stroke="url(#ribbon)" stroke-width="31" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M96 118c-41-4-66 13-68 40-2 29 28 50 67 43 32-6 48-33 70-62 24-31 48-54 80-47 29 7 38 35 22 57-16 23-45 31-73 25-35-8-62-33-74-62" fill="none" stroke="url(#ivory)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M198 208c32 23 43 49 30 75-14 27-49 38-88 25-25-8-44-26-53-50" fill="none" stroke="url(#ribbon)" stroke-width="31" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="104" cy="323" r="13" fill="#ff4f91"/>
+</svg>
