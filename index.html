@@ -160,6 +160,60 @@
   .m-save{ background:linear-gradient(135deg,var(--coral),var(--purple)); color:#fff; }
   .m-cancel{ background:rgba(124,77,255,.08); color:var(--ink-soft); }
 
+  /* الهوية الليلية المعتمدة */
+  :root{
+    --purple:#9b6cff; --purple-deep:#b18bff;
+    --coral:#ff5793; --coral-soft:#ff82ad;
+    --sunny:#f2b55d; --sunny-light:#ffd28d;
+    --mint:#52d8ba;
+    --ink:#fffaf2; --ink-soft:#b8abc6;
+    --paper:#21172f; --lav-bg:#100a1b;
+  }
+  body{
+    background:
+      radial-gradient(circle at 50% -8%,rgba(125,79,225,.22),transparent 32%),
+      radial-gradient(circle at 90% 72%,rgba(255,87,147,.08),transparent 28%),
+      #100a1b;
+    color:var(--ink); padding:0 16px;
+  }
+  .blob{filter:blur(70px);opacity:.12}
+  .blob.b1{background:#9b6cff;width:190px;height:190px;top:-70px;left:-80px}
+  .blob.b2{background:#ff5793;width:160px;height:160px;top:60%;right:-100px}
+  .blob.b3{display:none}
+  .wrap{max-width:480px;padding:28px 0 calc(48px + env(safe-area-inset-bottom))}
+  .hero{margin:0 0 24px;min-height:190px;display:flex;align-items:center;justify-content:center}
+  .brand-logo{width:148px;height:auto;display:block;filter:drop-shadow(0 16px 28px rgba(132,84,255,.22))}
+  .tabbar{gap:5px;padding:6px;margin-bottom:27px;background:rgba(38,25,56,.78);border:1px solid rgba(255,255,255,.08);border-radius:20px;box-shadow:0 18px 45px rgba(0,0,0,.22);backdrop-filter:blur(18px)}
+  .tab{flex:1;padding:11px 5px;border:0;border-radius:15px;background:transparent;color:var(--ink-soft);box-shadow:none;font-size:12px}
+  .tab.active{background:linear-gradient(135deg,#8155e9,#a875ff);box-shadow:0 7px 20px rgba(155,108,255,.34)}
+  .tiles{gap:12px;align-items:stretch}
+  .tile{aspect-ratio:auto;min-height:166px;border-radius:24px;background:#21172f!important;border:1px solid rgba(255,255,255,.075);box-shadow:0 18px 38px rgba(0,0,0,.2);gap:12px}
+  .tile:first-child{grid-row:span 2;min-height:344px;background:linear-gradient(155deg,#8f63ff 0%,#784ce5 55%,#ff5d99 115%)!important;box-shadow:0 20px 44px rgba(119,71,217,.28)}
+  .tile .num{font-size:58px;color:#fffaf2}.tile:first-child .num{font-size:88px}
+  .tile .glyph{opacity:.08}.tile .go{background:rgba(255,255,255,.09);color:#e7dcef}
+  .tile.add{min-height:92px;grid-column:1/-1;border:1px dashed rgba(177,139,255,.28);background:rgba(33,23,47,.6)!important;flex-direction:row}
+  .tile.add .plus{font-size:29px;color:#b18bff}.tile.add .lbl{color:var(--ink-soft)}
+  .album-intro{color:var(--ink-soft);margin-bottom:18px}
+  #counters{position:relative;padding-right:20px}#counters::before{content:"";position:absolute;right:5px;top:20px;bottom:20px;width:2px;background:rgba(255,255,255,.08)}
+  .cnode{background:#21172f;border:1px solid rgba(255,255,255,.075);border-radius:24px;box-shadow:0 16px 36px rgba(0,0,0,.2);margin-bottom:12px;padding:19px 20px;overflow:visible}
+  .cnode::before{right:-20px;top:26px;width:12px;height:12px;bottom:auto;border-radius:50%;background:#9b6cff!important;border:4px solid #100a1b}
+  .cemoji{background:rgba(155,108,255,.1)!important;color:#c8adff;font-family:Georgia,serif;font-size:30px}.cname{color:var(--ink)}.cdate,.cunit{color:var(--ink-soft)}.cnote{color:#ff82ad}
+  .c1 .cnum,.c2 .cnum,.c3 .cnum,.c4 .cnum{color:#a875ff}
+  .subtabbar{gap:5px;padding:5px;background:rgba(38,25,56,.76);border:1px solid rgba(255,255,255,.07);border-radius:18px;margin-bottom:18px}
+  .subtab{flex:1;border:0;background:transparent;color:var(--ink-soft);padding:10px 6px;font-size:12px}.subtab.active{background:#8f63ee;color:#fff;border-radius:14px}
+  .lock,.sum,.item,.modal{background:#21172f;border:1px solid rgba(255,255,255,.075);box-shadow:0 18px 42px rgba(0,0,0,.24)}
+  .lock{border-radius:26px}.pin .dot{background:#181022;border-color:rgba(168,117,255,.26);color:#b18bff}.pin .dot.filled{background:rgba(155,108,255,.13);border-color:#9b6cff}
+  .key{background:#181022;border-color:rgba(255,255,255,.07);color:#e9ddf5}.key:active{background:#302044}
+  .fbtn{background:#21172f;border-color:rgba(255,255,255,.08);color:var(--ink-soft)}.fbtn.active{background:#8f63ee;color:#fff}
+  .summary{gap:8px}.sum{border-radius:18px}.sum.total .v{color:#fffaf2}.sum.paid .v{color:#52d8ba}.sum.left .v{color:#ff729f}.sum .l{color:var(--ink-soft)}
+  .item{border-radius:20px}.item-name,.bars b{color:var(--ink)}.bars,.inote{color:var(--ink-soft)}.prog{background:rgba(255,255,255,.08)}
+  .iact{border-color:rgba(255,255,255,.11);color:var(--ink-soft)}
+  .addbtn,.m-save{background:linear-gradient(135deg,#8459e9,#a66fff 60%,#ff5793);box-shadow:0 10px 24px rgba(126,78,222,.25)}
+  .wempty,.wtool,.field label{color:var(--ink-soft)}.modal-bg{background:rgba(8,4,14,.7)}.modal h3{color:#fffaf2}.field input,.field textarea{background:#181022;border-color:rgba(255,255,255,.1);color:#fff}.m-cancel{background:#302440;color:#d5c8df}
+  .foot{display:none}
+  @media(max-width:360px){.hero{min-height:165px}.brand-logo{width:130px}.tile{min-height:148px}.tile:first-child{min-height:308px}.tile .num{font-size:49px}.tile:first-child .num{font-size:72px}}
+  @media(min-width:700px){body{padding:28px}.wrap{padding-left:18px;padding-right:18px;border-radius:38px;background:rgba(20,12,31,.78);box-shadow:0 28px 90px rgba(0,0,0,.28)}}
+
 </style>
 </head>
 <body>
@@ -169,7 +223,7 @@
 
   <div class="wrap">
     <div class="hero">
-      <div class="names">هادي<span class="amp">&amp;</span>جوري</div>
+      <img class="brand-logo" src="hadi-jori-exact.png" alt="شعار هادي وجوري">
     </div>
 
     <div class="tabbar">
@@ -208,9 +262,9 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const wdb = (typeof supabase!=="undefined") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 const GAMES = [
-  { file:"game1.html",   num:"١", glyph:"♥" },
+  { file:"game1.html",   num:"١", glyph:"◇" },
   { file:"index_1.html", num:"٢", glyph:"✦" },
-  { file:"game3.html",   num:"٣", glyph:"✸" }
+  { file:"game3.html",   num:"٣", glyph:"◌" }
   // ,{ file:"game4.html", num:"٤", glyph:"❈" }
 ];
 const wrap = document.getElementById("tiles");
@@ -230,9 +284,9 @@ if(GAMES.length % 2 === 1){
 // ===== العدّاد الحي للألبوم =====
 // عدّل التواريخ هنا (سنة, شهر, يوم). ملاحظة: الشهر يبدأ من 0 (يناير=0).
 const MILESTONES = [
-  { emoji:"💍", name:"الخطوبة", date:new Date(2026,0,1),  note:"حيث بدأت الحكاية", cls:"c1", future:false },
-  { emoji:"📜", name:"الملكة",  date:new Date(2026,4,29), note:"صرنا واحد",        cls:"c2", future:false },
-  { emoji:"🎉", name:"الزواج",  date:new Date(2026,11,18), note:"ليلة العمر",       cls:"c3", future:false }
+  { emoji:"◇", name:"الخطوبة", date:new Date(2026,0,1),  note:"حيث بدأت الحكاية", cls:"c1", future:false },
+  { emoji:"♡", name:"الملكة",  date:new Date(2026,4,29), note:"صرنا واحد",        cls:"c2", future:false },
+  { emoji:"✦", name:"الزواج",  date:new Date(2026,11,18), note:"ليلة العمر",       cls:"c3", future:false }
 ];
 
 function diffParts(from, to){
@@ -254,7 +308,7 @@ function buildCounters(){
     let bigHtml, dateHtml;
     if(!m.date){
       dateHtml = "— — —";
-      bigHtml = `<div class="cnum" style="font-size:22px;">بانتظاره ✨</div>`;
+      bigHtml = `<div class="cnum" style="font-size:22px;">بانتظاره ✦</div>`;
     } else {
       const p = diffParts(m.date, now);
       dateHtml = `${m.date.getDate()}-${m.date.getMonth()+1}-${m.date.getFullYear()}`;
@@ -386,7 +440,7 @@ function renderLock(){
   const o = OWNERS[currentOwner];
   wbody.innerHTML = `
     <div class="lock">
-      <div class="ic">🔒</div>
+      <div class="ic">◇</div>
       <div class="lt">${o.label}</div>
       <div class="ls" id="lockSub">أدخل الرقم السري (٤ أرقام)</div>
       <div class="pin" id="pinRow"></div>
@@ -521,7 +575,7 @@ function renderTable(){
     });
   }
   html += `<button class="addbtn" id="addItem">+ أضف بند جديد</button>`;
-  html += `<div class="wtools"><button class="wtool" id="changePin">تغيير الرقم السري 🔑</button> · <button class="wtool" id="lockAgain">قفل الجدول 🔒</button></div>`;
+  html += `<div class="wtools"><button class="wtool" id="changePin">تغيير الرقم السري ◇</button> · <button class="wtool" id="lockAgain">قفل الجدول ○</button></div>`;
   wbody.innerHTML = html;
 
   document.getElementById("addItem").onclick = ()=>openModal(null);
