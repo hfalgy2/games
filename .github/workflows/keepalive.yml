@@ -1,29 +1,46 @@
 # نبض دوري لإبقاء مشروع Supabase نشطاً (يمنع الإيقاف بسبب الخمول)
-# يشتغل تلقائياً كل يومين، ويمكن تشغيله يدوياً من تبويب Actions
+# سوبابيز تطلب "بضع طلبات يومياً" على مدى أسبوع، فنرسل استعلاماً حقيقياً كل 6 ساعات.
+# وقيتهوب يعطّل المهام المجدولة في المستودعات العامة بعد 60 يوماً بلا نشاط،
+# فالمهمة تعيد تفعيل نفسها في كل تشغيل.
 name: Supabase Keepalive
 
 on:
   schedule:
-    - cron: "0 6 */2 * *"   # كل يومين الساعة 6 صباحاً UTC
-  workflow_dispatch:          # زر تشغيل يدوي
+    - cron: "17 */6 * * *"   # كل 6 ساعات (دقيقة 17 لتفادي زحمة رأس الساعة)
+  workflow_dispatch:           # زر تشغيل يدوي
+
+permissions:
+  actions: write
+  contents: read
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase REST
-        run: |
-          echo "Sending heartbeat to Supabase..."
-          HTTP=$(curl -s -o /dev/null -w "%{http_code}" \
-            "${SUPABASE_URL}/rest/v1/wedding_locks?select=owner&limit=1" \
-            -H "apikey: ${SUPABASE_ANON_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
-          echo "HTTP status: $HTTP"
-          if [ "$HTTP" -ge 200 ] && [ "$HTTP" -lt 400 ]; then
-            echo "Heartbeat OK ✓"
-          else
-            echo "Heartbeat failed"; exit 1
-          fi
+      - name: Ping Supabase database
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          ok=0
+          for table in wedding_locks wedding_items game_answers wheel_progress; do
+            HTTP=$(curl -s -o /dev/null -w "%{http_code}" --retry 3 --retry-delay 10 --max-time 30 \
+              "${SUPABASE_URL}/rest/v1/${table}?select=*&limit=1" \
+              -H "apikey: ${SUPABASE_ANON_KEY}" \
+              -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" || echo "000")
+            echo "${table}: HTTP ${HTTP}"
+            if [ "$HTTP" -ge 200 ] && [ "$HTTP" -lt 400 ]; then ok=$((ok+1)); fi
+          done
+          if [ "$ok" -eq 0 ]; then
+            echo "::error::All pings failed. The project is probably paused. Restore it from the Supabase dashboard."
+            exit 1
+          fi
+          echo "Heartbeat OK ($ok/4 tables)"
+
+      - name: Keep this scheduled workflow enabled
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/keepalive.yml/enable" \
+            && echo "Workflow re-enabled" || echo "::warning::Could not re-enable workflow"
